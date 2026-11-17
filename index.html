@@ -337,6 +337,7 @@ h1,h2,h3{text-wrap:balance;margin:0}
 
 /* 스퀘어 카드 */
 .kit-wrap{margin:10px 0 4px}.kit-top{display:flex;flex-direction:column;gap:2px;margin:0 2px 6px}.sq.kit{min-height:96px}.kit-v{font-weight:800;font-size:15px;display:flex;align-items:center;gap:6px}.kit-dot{width:14px;height:14px;border-radius:50%;display:inline-block;box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.12)}
+.squad-map{margin:10px 0 2px;background:#fff;border:1.5px solid #ecd3db;border-radius:16px;padding:6px 6px 8px}.sq-legend{display:flex;gap:10px;justify-content:center;font-size:10.5px;color:#8b7f7c;flex-wrap:wrap}.sq-legend i{display:inline-block;width:14px;height:4px;border-radius:2px;margin-right:4px;vertical-align:middle}.sq-legend i.dash{background:repeating-linear-gradient(90deg,#B9AFB2 0 4px,transparent 4px 7px)}.sq-legend i.dot{background:repeating-linear-gradient(90deg,#8C7F84 0 2px,transparent 2px 5px)}.chips{display:flex;flex-wrap:wrap;gap:6px}.squad-roles{display:flex;flex-direction:column;gap:6px;margin-top:4px}
 .freebox .fstep{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1.5px dashed #ecd3db}.freebox .fstep p{margin:2px 0 6px}.fnum{flex:none;width:26px;height:26px;border-radius:50%;background:var(--blush,#f8dfe7);display:grid;place-items:center;font-weight:800;font-size:12.5px}.freebox textarea{width:100%;resize:vertical;font:inherit}.keyopt{margin-top:10px;border-top:1.5px dashed #ecd3db;padding-top:10px}.keyopt summary{font-size:12px;color:#8b7f7c;cursor:pointer}.freebox a.pill{text-decoration:none;color:inherit;display:inline-block}
 .sqgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 12px}
 .sq{background:#fff;border:1.5px solid #e6cfd7;border-radius:14px;padding:10px 10px 9px;min-height:118px;display:flex;flex-direction:column;gap:4px;line-height:1.5;position:relative;overflow:hidden;box-shadow:0 1px 0 rgba(110,86,80,.06)}
@@ -1161,7 +1162,7 @@ function vHome(){
     '<div class="kw">'+t.ganTen+' · '+t.zhiTen+'의 날</div><p class="muted">12운성 '+t.unseong+' · '+t.sinsal+'</p>'+
     (saved?'':'<p style="margin-top:6px"><button class="pill pk" data-act="today">Morning Note 열어보기</button></p>')+'</div></div>'+
     '<div class="fortune-text" id="todayOut">'+(saved?'<div class="paper" style="font-size:13px">'+md(saved)+'</div><p style="margin:10px 0 0;text-align:right"><button class="pill" data-act="today" data-force="1">다시 뽑기</button></p>':'')+'</div>';
-  var folders=[['chart','Manse','만세력 · 천을귀인','vanity'],['letters','Letter','Life Letter · 평생 편지','heartbow'],['ask','Ask','요즘 화제 질문','headphone'],['luck','Luck','Soft Ritual · 개운법','candle'],['muse','Muse','추구미 · 셀럽 사주','greenmask'],['match','Match','Bebe Match · 궁합','bow']];
+  var folders=[['chart','Manse','만세력 · 천을귀인','vanity'],['letters','Letter','Life Letter · 평생 편지','heartbow'],['ask','Ask','요즘 화제 질문','headphone'],['luck','Luck','Soft Ritual · 개운법','candle'],['muse','Muse','추구미 · 셀럽 사주','greenmask'],['match','Match','궁합 · 우리 무리','bow']];
   var ce=c.stars.filter(function(s){return s.name==='천을귀인';}).length;
   var heartPanel='<div class="panel p" style="display:flex;gap:12px;align-items:center"><div style="flex:1"><div class="big">My Saju</div><div class="cap" style="margin-top:8px">'+c.pillars[1].ko+' day · '+c.dayEl+' element<br>'+(du?'daeun '+du.ko+' '+du.startYear+'-'+du.endYear:'')+'<br>born '+p.y+'.'+pad(p.m)+'.'+pad(p.d)+'</div></div>'+pixIcon('heart',7,'#6b6b6b')+'</div>';
   var tags=[c.pillars[1].ko+'일주', c.animal+'띠', ce?'천을귀인':c.dayEl+' 일간', du?du.ko+' 대운':'', E.seun(c,y,y)[0].ko+'년'].filter(Boolean);
@@ -1303,6 +1304,74 @@ function readDraftInputs(){
   var yj=document.getElementById('f_yj'); if(yj) draft.opts.yajasi=yj.checked;
 }
 
+/* ============ Squad: 우리 무리 궁합 (2~5명) + 관계도 ============ */
+var squadSel=[];
+var NATURE={'갑':'큰 나무','을':'꽃·덩굴','병':'태양','정':'촛불','무':'큰 산','기':'정원 흙','경':'도끼·바위','신':'보석','임':'바다','계':'비'};
+var ELC={'목':['#D3E8D4','#4C7652'],'화':['#F7CFCF','#A04848'],'토':['#F0E3C6','#86682F'],'금':['#EEEDF0','#6B6666'],'수':['#45404F','#FFFFFF']};
+var ROLE={'목':'기획러 · 성장 담당','화':'분위기 메이커','토':'중재자 · 엄마 역할','금':'정리왕 · 팩폭 담당','수':'공감러 · 정보통'};
+function squadData(ids){
+  var ps=ids.map(function(id){return state.profiles.find(function(p){return p.id===id;});}).filter(Boolean);
+  var cs=ps.map(chartOf), pairs=[];
+  for(var i=0;i<ps.length;i++) for(var j=i+1;j<ps.length;j++) pairs.push({i:i,j:j,r:E.compat(cs[i],cs[j])});
+  var avg=pairs.length?Math.round(pairs.reduce(function(s,x){return s+x.r.score;},0)/pairs.length):0;
+  var els={목:0,화:0,토:0,금:0,수:0}; cs.forEach(function(c){ Object.keys(els).forEach(function(k){ els[k]+=c.elements[k]||0; }); });
+  return {ps:ps, cs:cs, pairs:pairs, avg:avg, els:els};
+}
+function edgeStyle(s){ return s>=80?{c:'#E5677D',w:4,d:'',t:'찰떡'}:s>=65?{c:'#E9A3B4',w:2.6,d:'',t:'좋음'}:s>=50?{c:'#B9AFB2',w:1.8,d:'5 4',t:'무난'}:{c:'#8C7F84',w:1.6,d:'2 4',t:'주의'}; }
+function squadSvg(ids, big){
+  var D=squadData(ids); var n=D.ps.length; if(n<2) return '';
+  var W=340,H=n===2?170:300,cx=W/2,cy=H/2+(n===3?8:0),R=n===2?110:118, pos=[];
+  for(var i=0;i<n;i++){ var ang= n===2? (i?0:Math.PI) : (-Math.PI/2 + i*2*Math.PI/n); pos.push([cx+R*Math.cos(ang), cy+(n===2?0:R*0.92*Math.sin(ang))]); }
+  var g='';
+  D.pairs.forEach(function(x){ var a=pos[x.i], b=pos[x.j], st=edgeStyle(x.r.score), adj=(x.j-x.i===1)||(x.i===0&&x.j===n-1), f=(n>=4&&!adj)?0.3:0.5, mx=a[0]+(b[0]-a[0])*f, my=a[1]+(b[1]-a[1])*f;
+    g+='<line x1="'+a[0]+'" y1="'+a[1]+'" x2="'+b[0]+'" y2="'+b[1]+'" stroke="'+st.c+'" stroke-width="'+st.w+'" stroke-linecap="round" '+(st.d?'stroke-dasharray="'+st.d+'"':'')+'/>';
+    g+='<g><rect x="'+(mx-17)+'" y="'+(my-9)+'" width="34" height="18" rx="9" fill="#fff" stroke="'+st.c+'" stroke-width="1.2"/><text x="'+mx+'" y="'+(my+4)+'" text-anchor="middle" font-size="10.5" font-weight="700" fill="#5b4b4f">'+x.r.score+'</text></g>'; });
+  D.ps.forEach(function(p,i){ var c=D.cs[i], col=ELC[c.dayEl]||ELC['토'], a=pos[i];
+    g+='<g><circle cx="'+a[0]+'" cy="'+a[1]+'" r="31" fill="'+col[0]+'" stroke="#fff" stroke-width="3"/><circle cx="'+a[0]+'" cy="'+a[1]+'" r="31" fill="none" stroke="#e1c9d1" stroke-width="1"/>'+
+      '<text x="'+a[0]+'" y="'+(a[1]-2)+'" text-anchor="middle" font-size="12.5" font-weight="800" fill="'+col[1]+'">'+esc(p.name.slice(0,4))+'</text>'+
+      '<text x="'+a[0]+'" y="'+(a[1]+13)+'" text-anchor="middle" font-size="9.5" fill="'+col[1]+'">'+esc(NATURE[c.dayGanKo]||c.dayEl)+'</text></g>'; });
+  var legend='<div class="sq-legend"><span><i style="background:#E5677D"></i>찰떡 80+</span><span><i style="background:#E9A3B4"></i>좋음</span><span><i class="dash"></i>무난</span><span><i class="dot"></i>주의</span></div>';
+  return '<div class="squad-map"><svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="우리 무리 관계도">'+g+'</svg>'+legend+'</div>';
+}
+function squadSummary(ids){
+  var D=squadData(ids); if(D.ps.length<2) return '';
+  var srt=D.pairs.slice().sort(function(a,b){return b.r.score-a.r.score;}), best=srt[0], worst=srt[srt.length-1];
+  var miss=Object.keys(D.els).filter(function(k){return D.els[k]===0;});
+  function nm(x){ return esc(D.ps[x.i].name)+' ♡ '+esc(D.ps[x.j].name); }
+  return '<div class="sqgrid">'+
+    '<div class="sq"><div class="sq-h">무리 평균</div><div class="sq-big">'+D.avg+'점</div><div class="tiny muted">'+(D.avg>=72?'영크크 늙크크 각':D.avg>=60?'편하게 오래 가는 무리':'다르니까 재밌는 무리')+'</div></div>'+
+    '<div class="sq"><div class="sq-h">찰떡 조합</div><div class="kit-v">'+nm(best)+'</div><div class="tiny muted">'+best.r.score+'점</div></div>'+
+    (D.pairs.length>1?'<div class="sq"><div class="sq-h">삐걱 주의</div><div class="kit-v">'+nm(worst)+'</div><div class="tiny muted">'+worst.r.score+'점 · 편지에서 해결법</div></div>':'')+
+    '<div class="sq"><div class="sq-h">무리에 없는 기운</div><div class="kit-v">'+(miss.length?miss.join('·'):'없음!')+'</div><div class="tiny muted">'+(miss.length?'이 기운 가진 친구가 들어오면 완성':'오행 올클리어')+'</div></div>'+
+   '</div>'+
+   '<div class="squad-roles">'+D.ps.map(function(p,i){ var c=D.cs[i]; return '<div class="row" style="padding:8px 10px"><span class="t"><b>'+esc(p.name)+' · <span class="hl">'+esc(NATURE[c.dayGanKo]||'')+'</span></b><span>'+ROLE[c.dayEl]+'</span></span></div>'; }).join('')+'</div>';
+}
+function squadWin(){
+  var P=state.profiles; if(P.length<2) return '';
+  squadSel=squadSel.filter(function(id){return P.find(function(p){return p.id===id;});});
+  if(!squadSel.length) squadSel=P.slice(0,Math.min(5,P.length)).map(function(p){return p.id;});
+  var key=squadSel.slice().sort().join('_'), saved=(state.squads||{})[key];
+  return win('our_squad.exe',
+    '<p style="margin:0 0 6px"><b class="hl">우리 무리 궁합</b> <span class="tiny muted">2~5명 골라봐</span></p>'+
+    '<div class="chips">'+P.map(function(p){ var on=squadSel.indexOf(p.id)>=0; return '<button class="pill'+(on?' pk':'')+'" data-act="squadPick" data-id="'+p.id+'" aria-pressed="'+on+'">'+(on?'✓ ':'')+esc(p.name)+'</button>'; }).join(' ')+'</div>'+
+    (squadSel.length>=2? squadSvg(squadSel)+squadSummary(squadSel)+
+      '<div id="squadOut">'+(saved?envRow('squad|'+key,'우리 무리 편지 · '+squadSel.length+'명'):'')+'</div>'+
+      '<button class="btn" style="margin-top:10px" data-act="squad">'+(saved?'무리 편지 다시 받기':'우리 무리 편지 받기 ♡')+'</button>'
+     :'<p class="tiny muted" style="margin-top:8px">두 명 이상 골라줘</p>'));
+}
+async function runSquad(){
+  if(busy) return; if(squadSel.length<2){ toast('두 명 이상 골라줘'); return; }
+  var ids=squadSel.slice().sort(), D=squadData(ids), key=ids.join('_');
+  var data=D.ps.map(function(p,i){ return '['+(i+1)+'. '+p.name+' ('+(p.relation||'')+')]\n'+E.toText(D.cs[i]); }).join('\n\n');
+  var pr=D.pairs.map(function(x){ return D.ps[x.i].name+'-'+D.ps[x.j].name+': '+x.r.score+'점 ('+x.r.why.map(function(w){return (w.n>0?'+':'')+w.n+' '+w.t;}).join(' / ')+')'; }).join('\n');
+  var prompt=PRINCIPLES+'\n\n[무리 멤버 '+D.ps.length+'명]\n'+data+'\n\n[앱이 계산한 1:1 궁합 점수]\n'+pr+'\n[무리 오행 합계] '+JSON.stringify(D.els)+
+   '\n\n[이번 편지: 우리 무리 궁합] 앱 화면 맨 위에 관계도 그림이 이미 보인다. 편지는 그 그림을 설명하듯 써라. 각 멤버를 자연 이미지(일간 기준: '+D.ps.map(function(p,i){return p.name+'='+(NATURE[D.cs[i].dayGanKo]||'');}).join(', ')+')로 부르면서 장면처럼 풀어라.\n'+
+   '## 우리 무리 한 줄 정의 (예: 숲에 태양이랑 비까지 다 있는 생태계 무리)\n## 멤버별 역할 (각자 ### 카드 하나씩: 자연 이미지, 무리에서 맡는 역할, 단톡방에서 하는 행동 한 장면)\n## 찰떡 조합 TOP (왜 잘 맞는지 그림으로)\n## 삐걱 조합과 화해법 (싸움 패턴 한 장면 + 해결법)\n## 같이 하면 잘 되는 것 (여행·스터디·사업·운동 중 추천과 이유)\n## 앞으로 1년 무리 운 (언제 모이면 좋고, 언제 서운함 쌓이기 쉬운지 월 단위)\n'+
+   '셀럽이 아닌 지인들이니 각자의 건강·가족 같은 사적 단정은 피하고 관계 중심으로. 맨 앞에 @@ 한눈에 보기(무리 케미 n/5, 오래가는 지수 n/5, 단톡방 텐션 n/5 포함), 끝은 !! 한 줄.';
+  var text=await stream('squadOut', prompt, {modelTier:'complex', cache:false, title:'우리 무리 편지'}, true);
+  if(text){ state.squads=state.squads||{}; state.squads[key]={text:text, at:Date.now()}; if(state.opened) delete state.opened['squad|'+key]; save(); if(route==='match') render(); }
+}
+
 var matchSel={a:null,b:null};
 function nm(t,A,B){ return String(t).replace(/\bA(?=[가의에])/g,A.name).replace(/\bB(?=[가의에])/g,B.name); }
 function scoreBar(n){ return '<span style="display:block;height:8px;border:1.2px solid #8d7a75;border-radius:999px;background:#fff;overflow:hidden;margin-top:4px"><span style="display:block;height:100%;width:'+n+'%;background:'+(n>=80?'#EFA0B7':n>=65?'#F4C6D4':'#E7DCDC')+'"></span></span>'; }
@@ -1324,7 +1393,7 @@ function vMatch(){
     '<div style="display:flex;align-items:baseline;gap:10px"><span class="script" style="font-size:39.5px;line-height:1">'+rb.score+'</span><span class="muted">/ 100 · '+esc(B.name)+'은(는) '+esc(A.name)+'에게 '+rb.tenAB+', 반대로는 '+rb.tenBA+'</span></div>'+
     '<div style="margin-top:8px">'+rb.why.map(function(w){ return '<div class="star-card'+(w.n>0?' good':'')+'" style="padding:7px 10px"><b>'+(w.n>0?'+':'')+w.n+'</b> <span style="font-size:11.5px">'+esc(w.t)+'</span></div>'; }).join('')+'</div>'+
     '<button class="btn" style="margin-top:10px" data-act="match">'+(saved?'궁합 편지 다시 받기':'궁합 편지 받기 (AI 상세 풀이)')+'</button>');
-  return header()+'<div class="sec-h"><h2>Match</h2><span class="sel">Bebe Match Card · 궁합 순위</span></div>'+
+  return header()+'<div class="sec-h"><h2>Match</h2><span class="sel">Bebe Match Card · 궁합 순위</span></div>'+squadWin()+
     win('match_rank.exe','<label class="l" for="m_a">누구 기준으로 볼까요?</label><select class="inp" id="m_a">'+P.map(function(p){return '<option value="'+p.id+'" '+(p.id===A.id?'selected':'')+'>'+esc(p.name)+' ('+esc(p.relation)+')</option>';}).join('')+'</select>'+
       '<p class="tiny muted" style="margin:8px 0 12px">일간 합·상생, 일지(배우자 자리) 합·충·원진, 띠, 오행 보완, 천을귀인 교차로 매긴 규칙 기반 점수예요.</p>'+list)+
     (pairs.length>1?win('all_couples_top5.exe','<table class="seun"><tbody>'+top+'</tbody></table>'):'')+
@@ -1606,6 +1675,7 @@ function letterInfo(key){
     if(k[0]==='reunion'){ var r=(state.reunion||{})[k[1]]; if(!r||!r.text) return null; var p2=P(k[1]); return {key:key, title:'재회운', sub:(p2?p2.name+' · ':'')+'Reunion', text:r.text, at:r.at||0, obj:'locket', pid:k[1], back:'reunion'}; }
     if(k[0]==='weekly'){ var w=(state.weekly||{})['issue_'+k[1]]; if(!w) return null; var m=museList().find(function(x){return x.id===w.id;}); return {key:key, title:'Juju Weekly Vol.'+k[1], sub:m?m.ko+' 특집':'뉴스레터', text:w.text, at:w.at||0, obj:'camera', back:'muse'}; }
     if(k[0]==='muse'){ var mu=(state.weekly||{})['muse_'+k[1]+'_'+k[2]]; if(!mu) return null; var m2=museList().find(function(x){return x.id===k[2];}); var p3=P(k[1]); return {key:key, title:'추구미 · '+(m2?m2.ko:''), sub:(p3?p3.name+' · ':'')+'Muse', text:mu.text, at:mu.at||0, obj:'key', pid:k[1], back:'muse'}; }
+    if(k[0]==='squad'){ var sq=(state.squads||{})[k[1]]; if(!sq) return null; var sids=k[1].split('_'); var names=sids.map(function(id){var q=P(id); return q?q.name:'';}).filter(Boolean); return {key:key, title:'우리 무리 · '+names.join(' · '), sub:'Squad · '+sids.length+'명', text:sq.text, at:sq.at||0, obj:'ribbon', back:'match', top:squadSvg(sids)}; }
     if(k[0]==='match'){ var mt=(state.matches||{})[k[1]]; if(!mt) return null; var ids=k[1].split('_'), a=P(ids[0]), b=P(ids[1]); var txt=typeof mt==='string'?mt:mt.text; return {key:key, title:'궁합 · '+(a?a.name:'')+' ♡ '+(b?b.name:''), sub:'Match', text:txt, at:(mt.at||0), obj:'locket', back:'match'}; }
   }catch(e){}
   return null;
@@ -1616,6 +1686,7 @@ function allLetters(){
   Object.keys(state.reunion||{}).forEach(function(pid){ keys.push('reunion|'+pid); });
   Object.keys(state.weekly||{}).forEach(function(w){ if(/^issue_/.test(w)) keys.push('weekly|'+w.slice(6)); else if(/^muse_/.test(w)){ var x=w.slice(5); var i=x.indexOf('_'); keys.push('muse|'+x.slice(0,i)+'|'+x.slice(i+1)); } });
   Object.keys(state.matches||{}).forEach(function(m){ keys.push('match|'+m); });
+  Object.keys(state.squads||{}).forEach(function(m){ keys.push('squad|'+m); });
   return keys.map(letterInfo).filter(Boolean).sort(function(a,b){return b.at-a.at;});
 }
 function isOpened(key){ return !!(state.opened||{})[key]; }
@@ -1639,7 +1710,7 @@ function vRead(){
       '<div class="env-body" style="padding:18px"><div><div class="sub">a letter for you</div><div class="big" style="font-size:23.5px">'+esc(L.title)+'</div><div class="sub">'+esc(L.sub)+'</div></div><span class="env-state">탭해서 열기</span></div></button></div>';
   }
   return head+'<div class="sec-h" style="margin-top:8px"><h2>Letter</h2><span class="sel">'+esc(L.title)+'</span></div>'+
-    '<article class="paper">'+md(L.text)+'<div style="display:flex;justify-content:center;margin:26px 0 10px"><div class="lace"><div class="script">Love, Juju</div></div></div></article>'+
+    (L.top?win('squad_map.exe',L.top):'')+'<article class="paper">'+md(L.text)+'<div style="display:flex;justify-content:center;margin:26px 0 10px"><div class="lace"><div class="script">Love, Juju</div></div></div></article>'+
     '<p class="tiny muted" style="text-align:right">'+(L.at?new Date(L.at).toLocaleString('ko-KR')+' 도착':'')+'</p>'+
     '<div class="grid2"><button class="btn ghost" data-act="copyKey" data-key="'+esc(L.key)+'">텍스트 복사</button><button class="btn" data-go="'+(L.back||'letters')+'">다시 받으러 가기</button></div>';
 }
@@ -1713,6 +1784,8 @@ document.addEventListener('click', function(e){
   else if(a==='quickgo'){ go('chart'); setTimeout(function(){ var q=document.getElementById('quick'); if(q) q.scrollIntoView({behavior:'smooth'}); var i=document.getElementById('q_name'); if(i) i.focus({preventScroll:true}); },60); }
   else if(a==='del'){ if(t.dataset.confirm){ var id=t.dataset.id; state.profiles=state.profiles.filter(function(p){return p.id!==id;}); delete state.readings[id]; delete state.chats[id]; delete state.photos[id]; if(state.currentId===id) state.currentId=state.profiles[0]?state.profiles[0].id:null; save(); draft=null; go('people'); } else { t.dataset.confirm='1'; t.textContent='한 번 더 누르면 지워져요'; } }
   else if(a==='match') runMatch();
+  else if(a==='squad') runSquad();
+  else if(a==='squadPick'){ var sid=t.dataset.id, ix=squadSel.indexOf(sid); if(ix>=0) squadSel.splice(ix,1); else { if(squadSel.length>=5){ toast('무리는 5명까지!'); return; } squadSel.push(sid); } render(); }
   else if(a==='readLetter'){ go('read', t.dataset.key); }
   else if(a==='openSeal'){ state.opened=state.opened||{}; state.opened[t.dataset.key]=Date.now(); save(); render(); window.scrollTo(0,0); }
   else if(a==='copyKey'){ var LL=letterInfo(t.dataset.key); if(LL) copy(LL.text,'편지를 복사했어요'); }
