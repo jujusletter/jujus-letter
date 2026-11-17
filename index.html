@@ -1897,11 +1897,24 @@ async function sendChat(q){
   else { log.pop(); }
   if(route==='talk') render();
 }
+function coupleExtra(A,B){
+  var W=A.gender==='F'?A:B, M=A.gender==='F'?B:A;
+  return '\n\n[남녀 궁합 추가 섹션: 반드시 아래 두 ## 섹션을 넣어라]\n'+
+  '## 우리 둘의 아이 인연 (자녀운)\n'+
+  '* 근거: '+W.name+'(여)는 식상(내가 낳고 표현하는 기운), '+M.name+'(남)는 관성(나를 이끄는 기운)을 자녀 자리로 보고, 두 사람의 시주(자녀 자리)와 대운 흐름을 교차해서 본다.\n'+
+  '* 아이와 인연이 들어오기 쉬운 시기(대운·세운, 연도로), 아이가 생기면 각자 어떤 부모 스타일일지(예: 태양 아빠는 놀이터 담당, 큰 나무 엄마는 계획표 담당 같은 장면), 육아에서 부딪힐 지점과 해결법.\n'+
+  '* 임신·출산 가능 여부, 난임, 건강, 자녀 수, 성별은 절대 단정하지 마라. 사주는 인연과 시기와 분위기만 말할 수 있다고 한 줄로 분명히 밝혀라.\n'+
+  '## 양가에서 보는 우리 (며느리·사위 썰)\n'+
+  '* '+W.name+'은 시댁에서 어떤 며느리일지: 인성(어른·윗사람 기운), 관성(남편 쪽 가족 기운), 비겁(자기 주관) 균형으로 장면처럼(명절, 첫인사, 단톡방) 풀어라. 예: 큰 나무 며느리라 처음엔 각 잡혀 보이는데 명절 두 번이면 시어머니 최애 등극 각.\n'+
+  '* '+M.name+'은 처가에서 어떤 사위일지: 재성(아내·처가 쪽 기운), 식상(애교·센스), 인성 균형으로 장면처럼 풀어라.\n'+
+  '* 양가 사이에서 서운함이 생기기 쉬운 포인트 1개씩과 미리 정해두면 좋은 규칙(명절 순서, 연락 빈도 등).\n'+
+  '* 양가 부모님 사주는 모르니 부모님 성격을 단정하지 말고, 두 사람이 어떻게 비칠지 중심으로 써라.';
+}
 async function runMatch(){
   if(busy) return; var A=state.profiles.find(function(p){return p.id===matchSel.a;}), B=state.profiles.find(function(p){return p.id===matchSel.b;});
   if(!A||!B||A.id===B.id){ toast('서로 다른 두 사람을 골라주세요'); return; }
   var cs=E.compat(chartOf(A),chartOf(B));
-  var prompt = PRINCIPLES+'\n\n[A]\n'+context(A)+'\n\n[B]\n'+context(B)+'\n\n[앱 궁합 점수] '+cs.score+'점 (규칙 기반). 근거: '+cs.why.map(function(w){return (w.n>0?'+':'')+w.n+' '+w.t;}).join(' / ')+'. B는 A에게 '+cs.tenAB+', A는 B에게 '+cs.tenBA+'. 이 점수를 참고하되 명리 구조로 검증해서 최종 점수를 따로 매겨라.'+'\n\n[이번 편지에서 할 일] A('+A.name+', '+A.relation+')와 B('+B.name+', '+B.relation+')의 궁합을 분석하라.\n* 일간끼리의 관계(생·극·비화)와 오행 보완 여부\n* 일지(배우자 자리)끼리 합·충·형·원진\n* 서로의 십성으로 본 역할 (상대가 나에게 관성/재성/식상/인성/비겁 중 무엇인지)\n* 끌림의 이유 / 갈등이 터지는 지점과 패턴\n* 연애·결혼·사업·친구 관계로서 각각의 적합도\n* 관계가 좋아지는 시기와 위기 시기 (두 사람의 대운·세운 교차)\n* 이 관계를 오래 가게 하는 현실적 규칙 3가지\n* 100점 만점 점수와 그 근거 (점수는 냉정하게)';
+  var prompt = PRINCIPLES+'\n\n[A]\n'+context(A)+'\n\n[B]\n'+context(B)+'\n\n[앱 궁합 점수] '+cs.score+'점 (규칙 기반). 근거: '+cs.why.map(function(w){return (w.n>0?'+':'')+w.n+' '+w.t;}).join(' / ')+'. B는 A에게 '+cs.tenAB+', A는 B에게 '+cs.tenBA+'. 이 점수를 참고하되 명리 구조로 검증해서 최종 점수를 따로 매겨라.'+'\n\n[이번 편지에서 할 일] A('+A.name+', '+A.relation+')와 B('+B.name+', '+B.relation+')의 궁합을 분석하라.\n* 일간끼리의 관계(생·극·비화)와 오행 보완 여부\n* 일지(배우자 자리)끼리 합·충·형·원진\n* 서로의 십성으로 본 역할 (상대가 나에게 관성/재성/식상/인성/비겁 중 무엇인지)\n* 끌림의 이유 / 갈등이 터지는 지점과 패턴\n* 연애·결혼·사업·친구 관계로서 각각의 적합도\n* 관계가 좋아지는 시기와 위기 시기 (두 사람의 대운·세운 교차)\n* 이 관계를 오래 가게 하는 현실적 규칙 3가지\n* 100점 만점 점수와 그 근거 (점수는 냉정하게)'+(A.gender!==B.gender?coupleExtra(A,B):'');
   var text = await stream('matchOut', prompt, { modelTier:'complex', cache:false, title:'궁합 편지' }, true);
   if(text){ state.matches[A.id+'_'+B.id]={text:text, at:Date.now()}; if(state.opened) delete state.opened['match|'+A.id+'_'+B.id]; save(); if(route==='match') render(); }
 }
