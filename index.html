@@ -340,6 +340,7 @@ h1,h2,h3{text-wrap:balance;margin:0}
 .squad-map{margin:10px 0 2px;background:#fff;border:1.5px solid #ecd3db;border-radius:16px;padding:6px 6px 8px}.sq-legend{display:flex;gap:10px;justify-content:center;font-size:10.5px;color:#8b7f7c;flex-wrap:wrap}.sq-legend i{display:inline-block;width:14px;height:4px;border-radius:2px;margin-right:4px;vertical-align:middle}.sq-legend i.dash{background:repeating-linear-gradient(90deg,#B9AFB2 0 4px,transparent 4px 7px)}.sq-legend i.dot{background:repeating-linear-gradient(90deg,#8C7F84 0 2px,transparent 2px 5px)}.chips{display:flex;flex-wrap:wrap;gap:6px}.squad-roles{display:flex;flex-direction:column;gap:6px;margin-top:4px}
 .squad-banner{display:block;width:100%;text-align:left;position:relative;margin:12px 0 4px;padding:14px 14px 12px;border-radius:20px;border:2px solid #E9A3B4;background:linear-gradient(160deg,#FFF5F8,#FDE6EE);box-shadow:0 4px 0 #F2C6D3;cursor:pointer;font:inherit;color:inherit}.sb-new{position:absolute;top:10px;right:12px;background:#E5677D;color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px;letter-spacing:.5px}.sb-top{display:flex;gap:10px;align-items:center}.sb-top b{display:block;font-size:16px}.sb-top small{font-size:11.5px;color:#8b7f7c}.sb-map{margin-top:6px;pointer-events:none}.sb-map .squad-map{margin:4px 0 0;padding:2px}.sb-map .sq-legend{display:none}.sb-map svg{max-height:200px}.sb-empty{margin:10px 0 2px;padding:14px;border:1.5px dashed #E9A3B4;border-radius:14px;font-size:12.5px;text-align:center;color:#a0707f}.sb-cta{display:block;margin-top:8px;text-align:center;font-weight:800;font-size:13px;background:#fff;border:1.5px solid #E9A3B4;border-radius:99px;padding:8px}
 .why{font-size:11.5px;color:#9a8a8f;line-height:1.55;margin-top:6px!important;padding-top:6px;border-top:1px dashed #ecd3db}.why-t{display:inline-block;font-size:10px;font-weight:800;color:#c27a8f;background:#fbe9ef;border-radius:99px;padding:0 7px;margin-right:5px}
+.rep .sq-h{font-weight:800}.rep-grade{display:flex;gap:12px;align-items:center;margin-top:6px}.rep-grade .g{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;font:800 30px/1 Fredoka,var(--body);color:#fff;background:linear-gradient(140deg,#F48CA0,#E5677D);box-shadow:0 3px 0 #C9566C}.rep-grade .gB,.rep-grade .gC{background:linear-gradient(140deg,#F7B7C6,#E9A3B4);box-shadow:0 3px 0 #D3899B}.rep-grade .gD{background:linear-gradient(140deg,#cfc3c7,#a99ca0);box-shadow:0 3px 0 #8f8286}.rb-row{display:grid;grid-template-columns:68px 1fr 38px;gap:6px;align-items:center;font-size:11px;margin:3px 0}.rb-bar{height:7px;border-radius:99px;background:#f6e7ec;overflow:hidden}.rb-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#F7B7C6,#E5677D)}.rb-row b{text-align:right;font-size:10.5px;color:#9a8a8f}.rep-twin{display:flex;justify-content:space-between;align-items:center;margin-top:6px}.sim{font-size:11px;font-weight:800;color:#B5687C;background:#fde9ef;border-radius:99px;padding:3px 9px}.gtabs{display:flex;gap:5px;flex-wrap:wrap;margin:6px 0}.gtabs .pill{font-size:11px;padding:4px 10px}
 .freebox .fstep{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1.5px dashed #ecd3db}.freebox .fstep p{margin:2px 0 6px}.fnum{flex:none;width:26px;height:26px;border-radius:50%;background:var(--blush,#f8dfe7);display:grid;place-items:center;font-weight:800;font-size:12.5px}.freebox textarea{width:100%;resize:vertical;font:inherit}.keyopt{margin-top:10px;border-top:1.5px dashed #ecd3db;padding-top:10px}.keyopt summary{font-size:12px;color:#8b7f7c;cursor:pointer}.freebox a.pill{text-decoration:none;color:inherit;display:inline-block}
 .sqgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 12px}
 .sq{background:#fff;border:1.5px solid #e6cfd7;border-radius:14px;padding:10px 10px 9px;min-height:118px;display:flex;flex-direction:column;gap:4px;line-height:1.5;position:relative;overflow:hidden;box-shadow:0 1px 0 rgba(110,86,80,.06)}
@@ -744,7 +745,18 @@ h1,h2,h3{text-wrap:balance;margin:0}
     return L2.join('\n');
   }
 
-  var api = { gaeun: gaeun, compat: compat, months: months, compute: compute, seun: seun, today: today, toText: toText, ko: ko, tenGod: tenGod, EL: EL, EL_HANJA: EL_HANJA, GAN_KO: GAN_KO, ZHI_KO: ZHI_KO };
+
+  function balance(c){
+    var els=c.elements, keys=['목','화','토','금','수'], n=0;
+    keys.forEach(function(k){ n+=els[k]||0; });
+    var ideal=n/5, dev=0, miss=0;
+    keys.forEach(function(k){ dev+=Math.abs((els[k]||0)-ideal); if(!(els[k]||0)) miss++; });
+    var maxDev=2*(n-ideal);
+    var g=gaeun(c), even=1-dev/maxDev, sb=1-Math.abs(g.ratio-50)/50;
+    var score=Math.round(60*even+40*sb-5*miss);
+    return {score:Math.max(0,Math.min(100,score)), even:Math.round(even*100), strength:g.ratio, missing:miss};
+  }
+  var api = { balance: balance, gaeun: gaeun, compat: compat, months: months, compute: compute, seun: seun, today: today, toText: toText, ko: ko, tenGod: tenGod, EL: EL, EL_HANJA: EL_HANJA, GAN_KO: GAN_KO, ZHI_KO: ZHI_KO };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.SajuEngine = api;
 })(this);
 
@@ -1214,7 +1226,7 @@ function vChart(){
   var se=E.seun(c,y-1,y+8);
   var seun='<table class="seun"><tbody>'+se.map(function(s){return '<tr class="'+(s.year===y?'now':'')+'"><td>'+s.year+'</td><td>'+s.ko+'</td><td>'+s.ganTen+' / '+s.zhiTen+'</td><td>'+s.unseong+'</td><td class="muted">'+s.age+'세</td></tr>';}).join('')+'</tbody></table>';
   return header()+roster()+
-    win('manse_'+esc(p.name)+'.exe', table+info)+funTiles(p)+
+    win('manse_'+esc(p.name)+'.exe', table+info)+reportCards(p)+funTiles(p)+
     win('ohaeng.exe', elbars)+
     win('guiin_sinsal.exe', stars)+
     win('hap_chung.exe', rels)+
@@ -1746,6 +1758,104 @@ var FUN={
  uns:{장생:'어딜 가도 귀여움 받는 막내력',목욕:'꾸미기·연애 감각 만렙',관대:'자신감 넘치는 신입 에너지',건록:'자수성가 독립형',제왕:'기 센 대장',쇠:'어른스러운 노련미',병:'공감력 높은 감성파',사:'한 번 빠지면 몰입 끝판왕',묘:'모으고 쌓는 금고형',절:'리셋 장인, 새 출발 잘함',태:'아이디어 씨앗 부자',양:'보호받는 복 있음'},
  star:{'천을귀인':'귀인 자석. 망해도 누가 꼭 구해줌','도화살':'가만히 있어도 눈에 띔','역마살':'한 자리 못 있음. 여행·이사각','화개살':'혼자 파고드는 덕후력','홍염살':'분위기 미인','문창귀인':'글빨·공부빨 있음','고란살':'혼자서도 잘해서 오히려 연애가 늦게 옴','현침살':'말이 바늘, 디테일 장인','원진살':'애증 관계가 자주 생김','귀문관살':'촉이 소름, 대신 예민','양인살':'승부욕 칼날','백호살':'에너지 폭발형','괴강살':'카리스마 극단','건록(록)':'내 밥그릇 내가 챙김','학당귀인':'배움 운 좋음','금여록':'품위 있고 좋은 짝 운','천덕귀인':'큰일이 작게 지나감','월덕귀인':'인복으로 버팀'}
 };
+/* ============ Report: 밸런스 등급 · 닮은 셀럽 · 대운 그래프 · 예쁜 포인트 ============ */
+var BAL_Q=[0,35,38,44,46,50,53,55,58,59,61,62,66,68,68,72,74,74,77,82,88];
+function balPct(sc){ var i=0; while(i<BAL_Q.length-1 && BAL_Q[i+1]<=sc) i++; return Math.max(1,100-i*5); }
+function balGrade(top){ return top<=10?'S':top<=30?'A':top<=60?'B':top<=85?'C':'D'; }
+var GRADE_TXT={S:'오행 밸런스 만렙. 어떤 운이 와도 크게 안 흔들리는 타입',A:'균형 잘 잡힌 편. 부족한 칸 하나만 채우면 S급',B:'평균 이상. 강한 기운이 확실해서 개성이 뚜렷해',C:'한쪽으로 쏠린 사주. 대신 그 쏠린 쪽이 네 무기야',D:'극단 몰빵형. 맞는 판에서는 누구보다 크게 터짐'};
+function balanceCard(c){
+  var b=E.balance(c), top=balPct(b.score), g=balGrade(top);
+  var bar=function(l,v){ return '<div class="rb-row"><span>'+l+'</span><div class="rb-bar"><i style="width:'+v+'%"></i></div><b>'+v+'</b></div>'; };
+  return '<div class="sq wide rep"><div class="sq-h">사주 밸런스 등급</div>'+
+    '<div class="rep-grade"><span class="g g'+g+'">'+g+'</span><div><b class="hl">상위 '+top+'%</b><div class="tiny muted">랜덤 생일 4,000개랑 비교한 위치</div></div></div>'+
+    '<p class="tiny" style="margin:6px 0 8px">'+GRADE_TXT[g]+'</p>'+
+    bar('오행 고르기',b.even)+bar('힘 균형',Math.round(100-Math.abs(b.strength-50)*2))+
+    '<div class="tiny muted" style="margin-top:4px">'+(b.missing?'없는 오행 '+b.missing+'개 · 운에서 들어올 때 체감 큼':'다섯 기운 올클리어')+'</div></div>';
+}
+function seasonOf(z){ return '인묘진'.indexOf(z)>=0?'봄':'사오미'.indexOf(z)>=0?'여름':'신유술'.indexOf(z)>=0?'가을':'겨울'; }
+function tenDist(c){ var d={}; c.pillars.slice(1).forEach(function(pl){ [pl.ganTen,pl.zhiTen].forEach(function(t){ if(t&&t!=='일간'&&t!=='본원') d[t]=(d[t]||0)+1; }); }); return d; }
+function elems6(c){ var e={목:0,화:0,토:0,금:0,수:0}; c.pillars.slice(1).forEach(function(pl){ e[pl.ganEl]++; e[pl.zhiEl]++; }); return e; }
+function simScore(a,b){
+  var s1=a.dayGanKo===b.dayGanKo?15:(a.dayEl===b.dayEl?8:0);
+  var s2=seasonOf(a.pillars[2].zhiKo)===seasonOf(b.pillars[2].zhiKo)?15:0;
+  var da=tenDist(a), db=tenDist(b), keys={}, diff=0, tot=0; Object.keys(da).concat(Object.keys(db)).forEach(function(k){keys[k]=1;});
+  Object.keys(keys).forEach(function(k){ diff+=Math.abs((da[k]||0)-(db[k]||0)); tot+=(da[k]||0)+(db[k]||0); });
+  var s3=Math.round(50*(1-diff/Math.max(1,tot)));
+  var ea=elems6(a), eb=elems6(b), ed=0; Object.keys(ea).forEach(function(k){ ed+=Math.abs(ea[k]-eb[k]); });
+  var s4=Math.round(20*(1-ed/12));
+  return {total:s1+s2+s3+s4, s1:s1,s2:s2,s3:s3,s4:s4};
+}
+var NATURE_LONG={'갑':'큰 나무','을':'꽃·덩굴','병':'태양','정':'촛불','무':'큰 산','기':'정원 흙','경':'원석·바위','신':'보석','임':'바다','계':'비·이슬'};
+function twinCard(p){
+  var me=chartOf(Object.assign({},p,{h:null})), list=MUSES.map(function(m){ var c; try{ c=E.compute({name:m.ko,gender:m.g,calendar:'solar',y:m.b[0],m:m.b[1],d:m.b[2],h:null,mi:0,opts:{localCorrection:true}}); }catch(e){ return null; } var s=simScore(me,c); return {m:m,c:c,s:s}; }).filter(Boolean).sort(function(a,b){return b.s.total-a.s.total;});
+  if(!list.length) return '';
+  var t=list[0], why=[];
+  if(t.s.s1===15) why.push('둘 다 '+NATURE_LONG[me.dayGanKo]+'('+me.dayGanKo+(E.EL?'':'')+') 일간이라 핵심 기질이 같아');
+  else if(t.s.s1) why.push('일간 오행이 같은 '+me.dayEl+' 계열이야');
+  if(t.s.s2) why.push('같은 '+seasonOf(me.pillars[2].zhiKo)+'에 태어나 기본 온도가 비슷해');
+  if(t.s.s3>=35) why.push('십성 구성이 많이 겹쳐서 일하는 방식이 닮았어');
+  var bar=function(l,v,mx){ return '<div class="rb-row"><span>'+l+'</span><div class="rb-bar"><i style="width:'+Math.round(v/mx*100)+'%"></i></div><b>'+v+'/'+mx+'</b></div>'; };
+  return '<div class="sq wide rep"><div class="sq-h">나랑 사주 닮은 셀럽</div>'+
+    '<div class="rep-twin"><div><b style="font-size:16px">'+esc(t.m.ko)+'</b> <span class="tiny muted">'+esc(t.m.tag||'')+'</span></div><span class="sim">유사도 '+t.s.total+'점</span></div>'+
+    '<ul class="tiny" style="margin:6px 0 8px;padding-left:16px">'+why.map(function(w){return '<li>'+w+'</li>';}).join('')+'</ul>'+
+    bar('핵심 정체성',t.s.s1,15)+bar('계절 조화',t.s.s2,15)+bar('십성 유사도',t.s.s3,50)+bar('오행 균형',t.s.s4,20)+
+    '<div class="tiny muted" style="margin-top:6px">그다음 닮은 사람: '+list.slice(1,3).map(function(x){return esc(x.m.ko)+' '+x.s.total+'점';}).join(' · ')+'</div>'+
+    '<div class="tiny muted">공개된 생일 기준, 시주 제외 비교 · 재미로 보는 기질 비교야</div></div>';
+}
+var CLASH={'자':'오','오':'자','축':'미','미':'축','인':'신','신':'인','묘':'유','유':'묘','진':'술','술':'진','사':'해','해':'사'};
+var GTABS=[['all','종합'],['money','재물운'],['love','애정운'],['health','건강'],['work','학업·업무']];
+var graphTab='all';
+function daeunScore(c,du,kind,gender){
+  var g=E.gaeun(c), sc=50;
+  [du.ganEl,du.zhiEl].forEach(function(el){ if(g.helpful.indexOf(el)>=0) sc+=12; if(el===g.excess) sc-=12; });
+  var tens=[du.ganTen,du.zhiTen];
+  function has(list){ return tens.filter(function(t){return list.indexOf(t)>=0;}).length; }
+  var clash=CLASH[c.pillars[1].zhiKo]===du.ko.charAt(1);
+  if(kind==='money') sc+=has(['정재','편재'])*12+has(['식신','상관'])*5-has(['비견','겁재'])*5;
+  if(kind==='love') sc+=has(gender==='F'?['정관','편관']:['정재','편재'])*12+has(['식신','상관'])*3-(clash?8:0);
+  if(kind==='work') sc+=has(['정인','편인'])*8+has(['정관','편관'])*8;
+  if(kind==='health') sc+=(clash?-18:4)+(['병','사','묘','절'].indexOf(du.unseong)>=0?-6:4);
+  return Math.max(8,Math.min(96,sc));
+}
+function daeunGraph(p){
+  var c=chartOf(p), list=c.daeun.slice(0,9); if(!list.length) return '';
+  var y=new Date().getFullYear(), W=340,H=170,L=26,R=10,T=14,B=26, n=list.length;
+  var pts=list.map(function(d,i){ var v; if(graphTab==='all'){ v=Math.round((daeunScore(c,d,'money',p.gender)+daeunScore(c,d,'love',p.gender)+daeunScore(c,d,'work',p.gender)+daeunScore(c,d,'health',p.gender))/4); } else v=daeunScore(c,d,graphTab,p.gender); return [L+(W-L-R)*i/(n-1), T+(H-T-B)*(1-v/100), v, d]; });
+  var path='M'+pts[0][0]+' '+pts[0][1]; for(var i=1;i<n;i++){ var a=pts[i-1], b=pts[i], mx=(a[0]+b[0])/2; path+=' C'+mx+' '+a[1]+' '+mx+' '+b[1]+' '+b[0]+' '+b[1]; }
+  var cur=list.findIndex(function(d){return y>=d.startYear&&y<=d.endYear;});
+  var band=cur>=0?'<rect x="'+(pts[cur][0]-(W-L-R)/(n-1)/2)+'" y="'+T+'" width="'+((W-L-R)/(n-1))+'" height="'+(H-T-B)+'" fill="#F8D5DF" opacity=".55" rx="6"/>':'';
+  var grid=[0,50,100].map(function(v){ var yy=T+(H-T-B)*(1-v/100); return '<line x1="'+L+'" x2="'+(W-R)+'" y1="'+yy+'" y2="'+yy+'" stroke="#eee" /><text x="2" y="'+(yy+4)+'" font-size="9" fill="#b8a9ad">'+v+'</text>'; }).join('');
+  var dots=pts.map(function(q,i){ return '<circle cx="'+q[0]+'" cy="'+q[1]+'" r="'+(i===cur?5:3.5)+'" fill="'+(i===cur?'#E5677D':'#F2A3B6')+'" stroke="#fff" stroke-width="1.5"/><text x="'+q[0]+'" y="'+(H-8)+'" text-anchor="middle" font-size="9" fill="#9a8a8f">'+q[3].startAge+'</text>'; }).join('');
+  var best=pts.slice().sort(function(a,b){return b[2]-a[2];})[0], worst=pts.slice().sort(function(a,b){return a[2]-b[2];})[0];
+  return '<div class="sq wide rep"><div class="sq-h">인생의 시기 (대운 그래프)</div>'+
+    '<div class="gtabs">'+GTABS.map(function(t){ return '<button class="pill'+(graphTab===t[0]?' pk':'')+'" data-act="gtab" data-id="'+t[0]+'">'+t[1]+'</button>'; }).join('')+'</div>'+
+    '<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="대운 흐름 그래프">'+grid+band+'<path d="'+path+'" fill="none" stroke="#E5677D" stroke-width="2.5"/>'+dots+'</svg>'+
+    '<p class="tiny" style="margin:4px 0 0"><b class="hl">피크</b> '+best[3].startAge+'~'+(best[3].startAge+9)+'세 ('+best[3].ko+' 대운) · <b>숨 고르기</b> '+worst[3].startAge+'~'+(worst[3].startAge+9)+'세 ('+worst[3].ko+' 대운)</p>'+
+    '<div class="tiny muted">대운 글자가 나를 돕는 기운인지로 계산한 참고 흐름이야. 핑크 칸이 지금.</div></div>';
+}
+var PRETTY={
+ '갑':['쭉 뻗은 큰 나무','어깨선이랑 목선이 반듯해서 기본 핏이 좋은 타입. 웃으면 청량한데 무표정이면 은근 고양이상.','니트에 코트만 걸쳐도 "꾸안꾸" 소리 들음'],
+ '을':['꽃·덩굴','눈빛이 촉촉하고 분위기 따라 얼굴이 바뀌는 카멜레온. 꾸미면 꾸밀수록 자기 색이 나와.','추구미 바꿀 때마다 주변이 "너 뭐 했어?" 함'],
+ '병':['한낮 태양','채도 높은 얼굴. 웃을 때 광대에 햇살 켜지는 햇살캐라 사진 찍으면 혼자 조명 받은 느낌.','음기 가득한 사람들 다 구원함'],
+ '정':['촛불','눈이 반짝이는 무대 체질. 감성 가득한 표정이라 가까이서 볼수록 더 예쁨.','어두운 데서 더 빛나는 사람, 밤 사진 레전드'],
+ '무':['큰 산','처음엔 말 걸기 어려운 우아한 분위기인데 웃으면 무장해제되는 갭 미모.','너 없어도 잘 살아 ㅋ 바이브인데 은근 다정함'],
+ '기':['정원 흙','잘 빚은 도자기 같은 피부결. 둥글고 포근한 인상이라 볼수록 정드는 얼굴.','여신머리 하면 그날 사진 다 건짐'],
+ '경':['원석·바위','이목구비 큼직하고 선명한 화려함. 몸선도 탄탄해서 운동복 핏 미침.','시원시원한 테토녀 무드, 옆에 있으면 든든'],
+ '신':['보석','예민하게 잘 다듬어진 얼굴. 날카로운데 은근 4차원이라 볼 때마다 새로움.','나르시즘이 매력 포인트, 거울 셀카 장인'],
+ '임':['바다','눈빛이 깊고 퇴폐미 한 스푼. 살짝 느끼한데 그게 매력이라 헤어나질 못함.','블랙 컬러 입으면 분위기 끝판왕'],
+ '계':['비·이슬','피부가 하얗고 맑아서 육수 잘 우릴 것 같은 청순함. 예술하는 사람 같은 무드.','비 오는 날 사진이 제일 예쁨']
+};
+function prettyCard(c){
+  var x=PRETTY[c.dayGanKo]; if(!x) return '';
+  return '<div class="sq wide rep"><div class="sq-h">일간별 예쁜 포인트</div>'+
+    '<div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">'+stk('facemask',44)+'<div><b class="hl">'+x[0]+'('+c.dayGanKo+') 타입</b><div class="tiny muted">일간 = 사주에서 나 자신</div></div></div>'+
+    '<p style="margin:0 0 6px">'+x[1]+'</p><p class="tiny" style="margin:0"><b>찐 포인트</b> · '+x[2]+'</p></div>';
+}
+function reportCards(p){
+  var c=chartOf(p);
+  return '<div class="sec-h"><h2>Report</h2><span class="sel">밸런스 · 닮은 셀럽 · 인생 그래프</span></div><div class="sqgrid">'+balanceCard(c)+prettyCard(c)+twinCard(p)+daeunGraph(p)+'</div>';
+}
+
 function funTiles(p){
   var c=chartOf(p), d=c.pillars[1], G=FUN.gan[c.dayGan];
   var nick=FUN.color[d.ganEl]+' '+FUN.animal[d.zhi];
@@ -1799,6 +1909,7 @@ document.addEventListener('click', function(e){
   else if(a==='del'){ if(t.dataset.confirm){ var id=t.dataset.id; state.profiles=state.profiles.filter(function(p){return p.id!==id;}); delete state.readings[id]; delete state.chats[id]; delete state.photos[id]; if(state.currentId===id) state.currentId=state.profiles[0]?state.profiles[0].id:null; save(); draft=null; go('people'); } else { t.dataset.confirm='1'; t.textContent='한 번 더 누르면 지워져요'; } }
   else if(a==='match') runMatch();
   else if(a==='squad') runSquad();
+  else if(a==='gtab'){ graphTab=t.dataset.id; var y0=window.scrollY; render(); window.scrollTo(0,y0); }
   else if(a==='squadPick'){ var sid=t.dataset.id, ix=squadSel.indexOf(sid); if(ix>=0) squadSel.splice(ix,1); else { if(squadSel.length>=5){ toast('무리는 5명까지!'); return; } squadSel.push(sid); } render(); }
   else if(a==='readLetter'){ go('read', t.dataset.key); }
   else if(a==='openSeal'){ state.opened=state.opened||{}; state.opened[t.dataset.key]=Date.now(); save(); render(); window.scrollTo(0,0); }
