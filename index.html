@@ -1845,15 +1845,27 @@ var PRETTY={
  '임':['바다','눈빛이 깊고 퇴폐미 한 스푼. 살짝 느끼한데 그게 매력이라 헤어나질 못함.','블랙 컬러 입으면 분위기 끝판왕'],
  '계':['비·이슬','피부가 하얗고 맑아서 육수 잘 우릴 것 같은 청순함. 예술하는 사람 같은 무드.','비 오는 날 사진이 제일 예쁨']
 };
-function prettyCard(c){
-  var x=PRETTY[c.dayGanKo]; if(!x) return '';
-  return '<div class="sq wide rep"><div class="sq-h">일간별 예쁜 포인트</div>'+
+var PRETTY_M={
+ '갑':['쭉 뻗은 큰 나무','어깨선 반듯하고 기본 핏이 좋은 타입. 웃으면 청량한데 무표정이면 은근 차가워 보임.','셔츠 하나만 입어도 "정석 미남" 소리 들음'],
+ '을':['꽃·덩굴','눈빛이 부드럽고 분위기 따라 인상이 바뀌는 타입. 스타일 바꿀 때마다 자기 색이 나와.','머리 스타일 바꾸면 주변이 "너 뭐 했어?" 함'],
+ '병':['한낮 태양','웃을 때 확 밝아지는 햇살캐. 사진 찍으면 혼자 조명 받은 느낌.','단체 사진에서 제일 먼저 눈에 띄는 사람'],
+ '정':['촛불','눈이 반짝이는 무대 체질. 가까이서 볼수록 매력이 올라가는 얼굴.','밤 사진, 조명 아래에서 레전드'],
+ '무':['큰 산','처음엔 말 걸기 어려운 듬직한 분위기인데 웃으면 무장해제되는 갭.','무심한데 은근 챙겨주는 거에 다 넘어감'],
+ '기':['정원 흙','둥글고 포근한 인상이라 볼수록 정드는 얼굴.','니트 입으면 호감도 만렙'],
+ '경':['원석·바위','이목구비 선명하고 몸선 탄탄한 타입. 운동복 핏 미침.','옆에 있으면 든든한 테토남 무드'],
+ '신':['보석','잘 다듬어진 날카로운 얼굴. 깔끔한데 은근 4차원이라 볼 때마다 새로움.','디테일까지 챙긴 깔끔룩 장인'],
+ '임':['바다','눈빛이 깊고 퇴폐미 한 스푼. 속을 모르겠는데 그게 매력.','블랙 컬러 입으면 분위기 끝판왕'],
+ '계':['비·이슬','피부가 맑고 소년 같은 청순함. 예술하는 사람 같은 무드.','비 오는 날 사진이 제일 잘 나옴']
+};
+function prettyCard(c,g){
+  var M=g==='M', x=(M?PRETTY_M:PRETTY)[c.dayGanKo]; if(!x) return '';
+  return '<div class="sq wide rep"><div class="sq-h">일간별 '+(M?'매력':'예쁜')+' 포인트</div>'+
     '<div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">'+stk('facemask',44)+'<div><b class="hl">'+x[0]+'('+c.dayGanKo+') 타입</b><div class="tiny muted">일간 = 사주에서 나 자신</div></div></div>'+
     '<p style="margin:0 0 6px">'+x[1]+'</p><p class="tiny" style="margin:0"><b>찐 포인트</b> · '+x[2]+'</p></div>';
 }
 function reportCards(p){
   var c=chartOf(p);
-  return '<div class="sec-h"><h2>Report</h2><span class="sel">밸런스 · 닮은 셀럽 · 인생 그래프</span></div><div class="sqgrid">'+balanceCard(c)+prettyCard(c)+twinCard(p)+daeunGraph(p)+'</div>';
+  return '<div class="sec-h"><h2>Report</h2><span class="sel">밸런스 · '+(p.gender==='M'?'매력 포인트':'닮은 셀럽')+' · 인생 그래프</span></div><div class="sqgrid">'+balanceCard(c)+prettyCard(c,p.gender)+(p.gender==='M'?'':twinCard(p))+daeunGraph(p)+'</div>';
 }
 
 function funTiles(p){
