@@ -338,6 +338,7 @@ h1,h2,h3{text-wrap:balance;margin:0}
 /* 스퀘어 카드 */
 .kit-wrap{margin:10px 0 4px}.kit-top{display:flex;flex-direction:column;gap:2px;margin:0 2px 6px}.sq.kit{min-height:96px}.kit-v{font-weight:800;font-size:15px;display:flex;align-items:center;gap:6px}.kit-dot{width:14px;height:14px;border-radius:50%;display:inline-block;box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.12)}
 .squad-map{margin:10px 0 2px;background:#fff;border:1.5px solid #ecd3db;border-radius:16px;padding:6px 6px 8px}.sq-legend{display:flex;gap:10px;justify-content:center;font-size:10.5px;color:#8b7f7c;flex-wrap:wrap}.sq-legend i{display:inline-block;width:14px;height:4px;border-radius:2px;margin-right:4px;vertical-align:middle}.sq-legend i.dash{background:repeating-linear-gradient(90deg,#B9AFB2 0 4px,transparent 4px 7px)}.sq-legend i.dot{background:repeating-linear-gradient(90deg,#8C7F84 0 2px,transparent 2px 5px)}.chips{display:flex;flex-wrap:wrap;gap:6px}.squad-roles{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.squad-banner{display:block;width:100%;text-align:left;position:relative;margin:12px 0 4px;padding:14px 14px 12px;border-radius:20px;border:2px solid #E9A3B4;background:linear-gradient(160deg,#FFF5F8,#FDE6EE);box-shadow:0 4px 0 #F2C6D3;cursor:pointer;font:inherit;color:inherit}.sb-new{position:absolute;top:10px;right:12px;background:#E5677D;color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px;letter-spacing:.5px}.sb-top{display:flex;gap:10px;align-items:center}.sb-top b{display:block;font-size:16px}.sb-top small{font-size:11.5px;color:#8b7f7c}.sb-map{margin-top:6px;pointer-events:none}.sb-map .squad-map{margin:4px 0 0;padding:2px}.sb-map .sq-legend{display:none}.sb-map svg{max-height:200px}.sb-empty{margin:10px 0 2px;padding:14px;border:1.5px dashed #E9A3B4;border-radius:14px;font-size:12.5px;text-align:center;color:#a0707f}.sb-cta{display:block;margin-top:8px;text-align:center;font-weight:800;font-size:13px;background:#fff;border:1.5px solid #E9A3B4;border-radius:99px;padding:8px}
 .freebox .fstep{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1.5px dashed #ecd3db}.freebox .fstep p{margin:2px 0 6px}.fnum{flex:none;width:26px;height:26px;border-radius:50%;background:var(--blush,#f8dfe7);display:grid;place-items:center;font-weight:800;font-size:12.5px}.freebox textarea{width:100%;resize:vertical;font:inherit}.keyopt{margin-top:10px;border-top:1.5px dashed #ecd3db;padding-top:10px}.keyopt summary{font-size:12px;color:#8b7f7c;cursor:pointer}.freebox a.pill{text-decoration:none;color:inherit;display:inline-block}
 .sqgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 12px}
 .sq{background:#fff;border:1.5px solid #e6cfd7;border-radius:14px;padding:10px 10px 9px;min-height:118px;display:flex;flex-direction:column;gap:4px;line-height:1.5;position:relative;overflow:hidden;box-shadow:0 1px 0 rgba(110,86,80,.06)}
@@ -1101,14 +1102,14 @@ window.addEventListener('hashchange', function(){ var h=location.hash.replace('#
 var NAV = [['home','Home'],['chart','Manse'],['letters','Letter'],['ask','Ask'],['talk','Talk'],['people','Friends']];
 function renderNav(){
   document.getElementById('nav').innerHTML = NAV.map(function(n){
-    return '<a href="#'+n[0]+'" data-go="'+n[0]+'" '+(route===n[0]||(route==='match'&&n[0]==='people')||(route==='reunion'&&n[0]==='ask')||(route==='luck'&&n[0]==='home')||(route==='muse'&&n[0]==='home')||(route==='read'&&n[0]==='letters')?'aria-current="page"':'')+'>'+SVG.nav[n[0]]+n[1]+'</a>';
+    return '<a href="#'+n[0]+'" data-go="'+n[0]+'" '+(route===n[0]||((route==='match'||route==='squad')&&n[0]==='people')||(route==='reunion'&&n[0]==='ask')||(route==='luck'&&n[0]==='home')||(route==='muse'&&n[0]==='home')||(route==='read'&&n[0]==='letters')?'aria-current="page"':'')+'>'+SVG.nav[n[0]]+n[1]+'</a>';
   }).join('');
 }
 function render(){
   var navEl=document.querySelector('.nav'); navEl.style.display=state.profiles.length?'':'none';
   if(!state.profiles.length){ $app.innerHTML = vWelcome(); return; }
   if(!cur()) state.currentId=state.profiles[0].id;
-  var r = ({read:vRead, muse:vMuse, luck:vLuck, home:vHome, chart:vChart, letters:vLetters, ask:vAsk, reunion:vReunion, talk:vTalk, people:vPeople, match:vMatch})[route] || vHome;
+  var r = ({read:vRead, muse:vMuse, luck:vLuck, home:vHome, chart:vChart, letters:vLetters, ask:vAsk, reunion:vReunion, talk:vTalk, people:vPeople, match:vMatch, squad:vSquad})[route] || vHome;
   $app.innerHTML = r();
   renderNav();
   if(route==='talk'){ var box=document.getElementById('chatEnd'); if(box) box.scrollIntoView({block:'end'}); }
@@ -1167,7 +1168,7 @@ function vHome(){
   var heartPanel='<div class="panel p" style="display:flex;gap:12px;align-items:center"><div style="flex:1"><div class="big">My Saju</div><div class="cap" style="margin-top:8px">'+c.pillars[1].ko+' day · '+c.dayEl+' element<br>'+(du?'daeun '+du.ko+' '+du.startYear+'-'+du.endYear:'')+'<br>born '+p.y+'.'+pad(p.m)+'.'+pad(p.d)+'</div></div>'+pixIcon('heart',7,'#6b6b6b')+'</div>';
   var tags=[c.pillars[1].ko+'일주', c.animal+'띠', ce?'천을귀인':c.dayEl+' 일간', du?du.ko+' 대운':'', E.seun(c,y,y)[0].ko+'년'].filter(Boolean);
   return header()+idCard(p)+pearls()+
-    win('fortune.exe', bubble)+luckyKit(p)+lace()+
+    win('fortune.exe', bubble)+squadBanner()+luckyKit(p)+lace()+
     '<div class="folders">'+folders.map(function(f,i){return '<button class="folder" data-go="'+f[0]+'">'+SVG.folder(i)+'<span class="f-stk">'+stk(f[3],48)+'</span><span class="lace-tab" aria-hidden="true"></span><span class="lbl"><b>'+f[1]+'</b><small>'+f[2]+'</small></span></button>';}).join('')+'</div>'+
     (function(){ var un=allLetters().filter(function(l){return !isOpened(l.key);}); return un.length?envRow(un[0].key, '안 읽은 편지 '+un.length+'통 · '+un[0].title):''; })()+roster()+'<p style="margin:0 0 6px"><button class="btn" data-act="quickgo">＋ 생년월일로 새 사주 보기</button></p><div class="grid2"><button class="btn ghost" data-act="openLetter" data-ch="s_new'+(new Date().getFullYear()+1)+'">'+(new Date().getFullYear()+1)+' 신년운세</button><button class="btn ghost" data-go="match">♡ 궁합 순위</button></div><div class="grid2" style="margin-top:6px"><button class="btn ghost" data-go="reunion">재회운</button><button class="btn ghost" data-go="ask">요즘 질문</button></div>'+
     '<button class="row" data-go="luck" style="margin-top:10px"><span class="ic">'+OBJ.pearl(36)+'</span><span class="t"><b>오늘의 개운 미션</b><span>'+esc(todayMission(p).text)+' · '+todayMission(p).el+' 채우기</span></span><span class="check">GO</span></button>'+
@@ -1369,7 +1370,17 @@ async function runSquad(){
    '## 우리 무리 한 줄 정의 (예: 숲에 태양이랑 비까지 다 있는 생태계 무리)\n## 멤버별 역할 (각자 ### 카드 하나씩: 자연 이미지, 무리에서 맡는 역할, 단톡방에서 하는 행동 한 장면)\n## 찰떡 조합 TOP (왜 잘 맞는지 그림으로)\n## 삐걱 조합과 화해법 (싸움 패턴 한 장면 + 해결법)\n## 같이 하면 잘 되는 것 (여행·스터디·사업·운동 중 추천과 이유)\n## 앞으로 1년 무리 운 (언제 모이면 좋고, 언제 서운함 쌓이기 쉬운지 월 단위)\n'+
    '셀럽이 아닌 지인들이니 각자의 건강·가족 같은 사적 단정은 피하고 관계 중심으로. 맨 앞에 @@ 한눈에 보기(무리 케미 n/5, 오래가는 지수 n/5, 단톡방 텐션 n/5 포함), 끝은 !! 한 줄.';
   var text=await stream('squadOut', prompt, {modelTier:'complex', cache:false, title:'우리 무리 편지'}, true);
-  if(text){ state.squads=state.squads||{}; state.squads[key]={text:text, at:Date.now()}; if(state.opened) delete state.opened['squad|'+key]; save(); if(route==='match') render(); }
+  if(text){ state.squads=state.squads||{}; state.squads[key]={text:text, at:Date.now()}; if(state.opened) delete state.opened['squad|'+key]; save(); if(route==='match'||route==='squad') render(); }
+}
+function vSquad(){
+  var P=state.profiles;
+  var body = P.length<2 ? win('our_squad.exe','<p class="empty">무리 궁합은 두 명부터!<br>친구 생일을 추가해봐</p>')+quickForm('무리 멤버 추가.exe') : squadWin()+'<p style="margin-top:10px"><button class="btn ghost" data-act="quickgo">＋ 멤버 더 추가하기</button></p>';
+  return header()+'<div class="sec-h"><h2>Squad</h2><span class="sel">우리 무리 궁합 · 관계도</span></div>'+body;
+}
+function squadBanner(){
+  var P=state.profiles, ids=P.slice(0,5).map(function(p){return p.id;});
+  return '<button class="squad-banner" data-go="squad"><span class="sb-new">NEW</span><div class="sb-top"><span>'+stk('bow',38)+'</span><div><b>우리 무리 궁합</b><small>친구 2~5명 관계도 + 무리 편지</small></div></div>'+
+    (P.length>=2?'<div class="sb-map">'+squadSvg(ids)+'</div>':'<div class="sb-empty">친구 생일 넣고 우리 무리 케미 보기 →</div>')+'<span class="sb-cta">무리 궁합 보러 가기 ♡</span></button>';
 }
 
 var matchSel={a:null,b:null};
@@ -1393,7 +1404,7 @@ function vMatch(){
     '<div style="display:flex;align-items:baseline;gap:10px"><span class="script" style="font-size:39.5px;line-height:1">'+rb.score+'</span><span class="muted">/ 100 · '+esc(B.name)+'은(는) '+esc(A.name)+'에게 '+rb.tenAB+', 반대로는 '+rb.tenBA+'</span></div>'+
     '<div style="margin-top:8px">'+rb.why.map(function(w){ return '<div class="star-card'+(w.n>0?' good':'')+'" style="padding:7px 10px"><b>'+(w.n>0?'+':'')+w.n+'</b> <span style="font-size:11.5px">'+esc(w.t)+'</span></div>'; }).join('')+'</div>'+
     '<button class="btn" style="margin-top:10px" data-act="match">'+(saved?'궁합 편지 다시 받기':'궁합 편지 받기 (AI 상세 풀이)')+'</button>');
-  return header()+'<div class="sec-h"><h2>Match</h2><span class="sel">Bebe Match Card · 궁합 순위</span></div>'+squadWin()+
+  return header()+'<div class="sec-h"><h2>Match</h2><span class="sel">Bebe Match Card · 궁합 순위</span></div>'+'<button class="row" data-go="squad" style="margin-bottom:10px;background:var(--blush)"><span class="ic">'+stk('bow',36)+'</span><span class="t"><b>우리 무리 궁합 보기</b><span>2~5명 관계도 + 무리 편지</span></span><span class="check">GO</span></button>'+
     win('match_rank.exe','<label class="l" for="m_a">누구 기준으로 볼까요?</label><select class="inp" id="m_a">'+P.map(function(p){return '<option value="'+p.id+'" '+(p.id===A.id?'selected':'')+'>'+esc(p.name)+' ('+esc(p.relation)+')</option>';}).join('')+'</select>'+
       '<p class="tiny muted" style="margin:8px 0 12px">일간 합·상생, 일지(배우자 자리) 합·충·원진, 띠, 오행 보완, 천을귀인 교차로 매긴 규칙 기반 점수예요.</p>'+list)+
     (pairs.length>1?win('all_couples_top5.exe','<table class="seun"><tbody>'+top+'</tbody></table>'):'')+
@@ -1675,7 +1686,7 @@ function letterInfo(key){
     if(k[0]==='reunion'){ var r=(state.reunion||{})[k[1]]; if(!r||!r.text) return null; var p2=P(k[1]); return {key:key, title:'재회운', sub:(p2?p2.name+' · ':'')+'Reunion', text:r.text, at:r.at||0, obj:'locket', pid:k[1], back:'reunion'}; }
     if(k[0]==='weekly'){ var w=(state.weekly||{})['issue_'+k[1]]; if(!w) return null; var m=museList().find(function(x){return x.id===w.id;}); return {key:key, title:'Juju Weekly Vol.'+k[1], sub:m?m.ko+' 특집':'뉴스레터', text:w.text, at:w.at||0, obj:'camera', back:'muse'}; }
     if(k[0]==='muse'){ var mu=(state.weekly||{})['muse_'+k[1]+'_'+k[2]]; if(!mu) return null; var m2=museList().find(function(x){return x.id===k[2];}); var p3=P(k[1]); return {key:key, title:'추구미 · '+(m2?m2.ko:''), sub:(p3?p3.name+' · ':'')+'Muse', text:mu.text, at:mu.at||0, obj:'key', pid:k[1], back:'muse'}; }
-    if(k[0]==='squad'){ var sq=(state.squads||{})[k[1]]; if(!sq) return null; var sids=k[1].split('_'); var names=sids.map(function(id){var q=P(id); return q?q.name:'';}).filter(Boolean); return {key:key, title:'우리 무리 · '+names.join(' · '), sub:'Squad · '+sids.length+'명', text:sq.text, at:sq.at||0, obj:'ribbon', back:'match', top:squadSvg(sids)}; }
+    if(k[0]==='squad'){ var sq=(state.squads||{})[k[1]]; if(!sq) return null; var sids=k[1].split('_'); var names=sids.map(function(id){var q=P(id); return q?q.name:'';}).filter(Boolean); return {key:key, title:'우리 무리 · '+names.join(' · '), sub:'Squad · '+sids.length+'명', text:sq.text, at:sq.at||0, obj:'ribbon', back:'squad', top:squadSvg(sids)}; }
     if(k[0]==='match'){ var mt=(state.matches||{})[k[1]]; if(!mt) return null; var ids=k[1].split('_'), a=P(ids[0]), b=P(ids[1]); var txt=typeof mt==='string'?mt:mt.text; return {key:key, title:'궁합 · '+(a?a.name:'')+' ♡ '+(b?b.name:''), sub:'Match', text:txt, at:(mt.at||0), obj:'locket', back:'match'}; }
   }catch(e){}
   return null;
