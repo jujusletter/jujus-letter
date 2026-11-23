@@ -53,7 +53,7 @@ h1,h2,h3{text-wrap:balance;margin:0}
 
 /* header */
 .hello{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin:6px 2px 14px}
-.hello h1{font-family:var(--display);font-size:34px;line-height:1;color:#7d7372;font-weight:400}
+.hello h1{font-family:inherit;font-size:24px;line-height:1.25;color:var(--cocoa);font-weight:800;letter-spacing:-0.04em;margin:0}
 .hello h1 .nm{font-family:var(--letter);font-size:21.5px;font-style:normal;margin-left:6px;color:var(--cocoa)}
 .hello .date{font-size:11px;margin-top:6px;color:#8b7f7c}
 .iconbtn{width:42px;height:42px;border-radius:12px;border:1.5px solid var(--cocoa);background:var(--white);display:grid;place-items:center;flex:none}
@@ -114,7 +114,7 @@ h1,h2,h3{text-wrap:balance;margin:0}
 .row .t span{font-size:11px;color:#8b7f7c}
 .check{width:38px;height:38px;border:1.5px solid #8d7a75;border-radius:8px;flex:none;display:grid;place-items:center;font-size:11.5px}
 .sec-h{display:flex;align-items:center;gap:10px;margin:22px 2px 12px}
-.sec-h h2{font-family:var(--display);font-weight:400;font-size:28px;line-height:1;color:#7d7372}
+.sec-h h2{font-family:inherit;font-weight:800;font-size:20px;line-height:1.2;color:var(--cocoa);letter-spacing:-0.04em}
 .sec-h .sel{border:1.5px solid #8d7a75;border-radius:8px;padding:3px 12px;background:#fff;font-size:12.5px}
 .pill{border:1.5px solid #8d7a75;border-radius:999px;padding:5px 14px;background:var(--sky);font-size:11px}
 .pill.pk{background:var(--blush)}
@@ -287,7 +287,7 @@ h1,h2,h3{text-wrap:balance;margin:0}
 .lacewrap{padding:7px;border-radius:26px;margin-bottom:16px;background-color:#fff;
   background-image:radial-gradient(circle,transparent 2.6px,#EBD3DB 3px,#EBD3DB 3.8px,transparent 4.2px),radial-gradient(circle,#EBD3DB 1px,transparent 1.4px);background-size:12px 12px,6px 6px;background-position:0 0,3px 3px;border:1px solid #E1C6CF}
 .lacewrap .idcard{margin:0}
-.hello h1,.sec-h h2,.logo .s,.w-name,.m-en{background:linear-gradient(180deg,#ffffff 0%,#b9b8c0 38%,#f6f6f8 52%,#8d8b95 78%,#d9d8de 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 0 rgba(90,70,75,.35))}
+.logo .s,.w-name,.m-en{background:linear-gradient(180deg,#ffffff 0%,#b9b8c0 38%,#f6f6f8 52%,#8d8b95 78%,#d9d8de 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 0 rgba(90,70,75,.35))}
 .hello h1 .nm{-webkit-text-fill-color:var(--cocoa);filter:none}
 .weekly{border-radius:20px;border:1.5px solid #d9c3ca;overflow:hidden;background:linear-gradient(180deg,#fff 0%,#FCE8EF 100%);background-image:linear-gradient(rgba(255,255,255,.6) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.6) 1px,transparent 1px),linear-gradient(180deg,#fff,#FBE4EC);background-size:22px 22px,22px 22px,100% 100%;padding:12px 14px 14px;margin-bottom:12px}
 .w-top{display:flex;justify-content:space-between;color:#8b7f7c;font-family:var(--pixel)}
@@ -395,6 +395,18 @@ h1,h2,h3{text-wrap:balance;margin:0}
 .dots i.on{background:radial-gradient(circle at 35% 30%,#fff 0 20%,#F7B8CC 45%,#E58FAC 100%);border-color:#d98aa5}
 .dots i.half{background:linear-gradient(90deg,#F2A9C0 50%,#f3e6ea 50%)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.wel{margin:10px 2px 18px}
+.wel-tag{font-size:11px;letter-spacing:.12em;color:var(--cocoa);opacity:.8;margin-bottom:10px}
+.wel h1{margin:0;font-size:26px;line-height:1.35;font-weight:800;letter-spacing:-0.05em;color:#3d2f2c}
+.wel h1 em{font-style:normal;color:#C2185B;background:linear-gradient(transparent 62%,#F8C9D7 0)}
+.wel-q{margin:0 2px 10px;font-size:17px;font-weight:800;letter-spacing:-0.04em;color:#3d2f2c}
+.wel-q span{display:block;font-size:12px;font-weight:500;color:var(--cocoa);margin-top:3px}
+.door.wide{grid-column:1 / -1}
+.more{margin:4px 0 10px}
+.more>summary{list-style:none;cursor:pointer;padding:14px 16px;border:1.5px dashed var(--cocoa);border-radius:6px;font-weight:700;font-size:14px;color:var(--cocoa);margin-bottom:14px}
+.more>summary::-webkit-details-marker{display:none}
+.more>summary small{display:block;font-weight:500;font-size:11px;opacity:.8;margin-top:3px}
+.more[open]>summary{border-style:solid}
 .doors{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 16px}
 .door{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:16px 14px;border:1.5px solid var(--cocoa);background:var(--blush);border-radius:6px;cursor:pointer;color:inherit;font:inherit;box-shadow:3px 3px 0 var(--cocoa)}
 .door .d-tag{font-size:10px;letter-spacing:.16em;opacity:.75}
@@ -931,6 +943,7 @@ var SVG = {
   heart:'<svg viewBox="0 0 24 22" width="22" height="20" aria-hidden="true"><path d="M12 20S2 13.5 2 7.2A4.9 4.9 0 0 1 12 5a4.9 4.9 0 0 1 10 2.2C22 13.5 12 20 12 20z" fill="#fff" stroke="#6E5650" stroke-width="1.5"/></svg>',
   folder:function(id){ return '<svg viewBox="0 0 200 160" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="fg'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBEDF2"/><stop offset="1" stop-color="#F7E6EC"/></linearGradient><filter id="fs'+id+'" x="-10%" y="-10%" width="120%" height="130%"><feGaussianBlur in="SourceAlpha" stdDeviation="3"/><feOffset dy="2"/><feComponentTransfer><feFuncA type="linear" slope=".18"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g filter="url(#fs'+id+')"><path d="M8 26q0-14 14-14h50q8 0 13 7l7 11h86q14 0 14 14v94q0 14-14 14H22q-14 0-14-14z" fill="#F2DDE5"/><path d="M8 42q0-12 14-12h156q14 0 14 14v92q0 14-14 14H22q-14 0-14-14z" fill="url(#fg'+id+')"/></g></svg>'; },
   nav:{
+    reunion:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 9"/><path d="M20 4v5h-5"/><path d="M20 12a8 8 0 0 1-13.7 5.6L4 15"/><path d="M4 20v-5h5"/></svg>',
     luck:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></svg>',
     love:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 20S3 14.5 3 8.6A4.6 4.6 0 0 1 12 6.5a4.6 4.6 0 0 1 9 2.1C21 14.5 12 20 12 20z"/></svg>',
     home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>',
@@ -1122,10 +1135,9 @@ function submitQuick(){
   state.profiles.push(p); state.currentId=p.id; save(); toast(p.name+' 사주를 펼쳤어요'); track('form_done'); if(landTo){ var T=landTo; landTo=null; go(T.to, T.sub); } else go('chart');
 }
 function vWelcome(){
-  return '<header class="hello"><div><h1>Hello,</h1><div class="date">생년월일만 넣으면 바로 사주가 펼쳐져요</div></div></header>'+
-    '<section class="idcard" style="grid-template-columns:1fr"><div class="logo"><span class="s">Juju\'s</span><span class="p">LET<br>TER</span>'+OBJ.key(52)+'</div><p style="margin:0;font-size:12.5px">만세력 · 천을귀인 · 12신살 · 대운 · 세운 · AI 사주 편지</p></section>'+
-    (landTo?'':'<div class="sec-h"><h2>뭐부터 볼까?</h2><span class="sel">고르고 생일만 넣으면 끝</span></div><div class="doors"><button class="door" data-pick="luck"><span class="d-tag">LUCK</span><b>내 개운 루틴</b><span>사주에 모자란 기운 채우는 작은 습관</span><i>이걸로 →</i></button><button class="door" data-pick="love"><span class="d-tag">LOVE</span><b>내 연애운 편지</b><span>끌리는 사람 · 반복되는 패턴</span><i>이걸로 →</i></button></div>')+
-    pearls()+quickForm(landTo?(landTo.to==='luck'?'개운루틴_생년월일.exe':'연애편지_생년월일.exe'):'welcome.exe');
+  return '<header class="wel"><div class="wel-tag">JUJU\'S LETTER · 사주 편지</div><h1>생일만 넣으면<br><em>연애운 · 재회운</em> 편지가<br>바로 와요</h1></header>'+
+    (landTo?'':'<p class="wel-q">뭐부터 볼까? <span>하나 고르고 생일만 넣으면 끝</span></p>'+doorsHTML('pick'))+
+    pearls()+quickForm(landTo?'생년월일만_넣으면_끝.exe':'welcome.exe');
 }
 /* ============ 렌더 ============ */
 var route = 'home', sub = null;
@@ -1136,6 +1148,8 @@ var LANDS={
  year:{to:'ask',sub:'year',tag:'LETTER No.27',h:'2027 신년운세<br>미리 받아보기',p:'정미년, 나한테 어떤 해일까',btn:'신년 편지 받기 ♡'},
  luck:{to:'luck',tag:'LUCKY ROUTINE',h:'오늘 나한테 맞는<br>개운 루틴',p:'내 사주에 모자란 기운을 채우는 작고 확실한 루틴',btn:'내 개운 루틴 받기 ♡'},
  squad:{to:'squad',tag:'SQUAD MATCH',h:'우리 무리<br>궁합 관계도',p:'친구 2~5명 생일만 넣으면 관계도가 그려져요',btn:'관계도 그려보기 ♡'},
+ reunion:{to:'reunion',tag:'BACK TO YOU',h:'다시 만날 수 있을까?<br>재회운 편지',p:'다시 연락 올 타이밍 · 가능성 · 내가 할 일',btn:'내 재회운 보기 ♡'},
+ month:{to:'letters',sub:'s_new'+new Date().getFullYear(),tag:'NOV · DEC',h:'아직 안 끝났다<br>남은 11·12월 사용법',p:'내 사주로 보는 남은 두 달, 뭐 하면 좋을까',btn:'남은 올해 편지 받기 ♡'},
  muse:{to:'muse',tag:'MY MUSE',h:'내 사주로 보는<br>추구미',p:'내 일간이 제일 예뻐 보이는 무드',btn:'내 추구미 보기 ♡'}
 };
 var landMode=!!LANDS[GO], landTo=null, evQ=[];
@@ -1149,6 +1163,14 @@ function flushEv(){
   while(evQ.length){ var p=evQ.shift(); try{ window.goatcounter.count({path:p,title:p,event:true}); }catch(e){} }
 }
 window.addEventListener('load',function(){ setTimeout(flushEv,800); setTimeout(flushEv,3000); });
+function doorsHTML(mode){
+  var att=function(k){ var L=LANDS[k]; return mode==='pick'?'data-pick="'+k+'"':'data-go="'+L.to+'"'+(L.sub?' data-sub="'+L.sub+'"':''); };
+  var go=mode==='pick'?'이걸로 →':'바로 보기 →';
+  return '<div class="doors">'+
+   '<button class="door" '+att('love')+'><span class="d-tag">LOVE</span><b>연애운 편지</b><span>끌리는 사람 · 반복되는 패턴 · 타이밍</span><i>'+go+'</i></button>'+
+   '<button class="door" '+att('reunion')+'><span class="d-tag">BACK TO YOU</span><b>재회운</b><span>다시 연락 올까? 타이밍까지</span><i>'+go+'</i></button>'+
+   '<button class="door wide" '+att('month')+'><span class="d-tag">NOV · DEC</span><b>남은 11·12월 잘 보내는 법</b><span>내 사주로 보는 남은 두 달 사용법</span><i>'+go+'</i></button></div>';
+}
 function vLand(){
   var L=LANDS[GO];
   return '<section class="land"><div class="land-tag">'+L.tag+'</div>'+
@@ -1169,10 +1191,10 @@ document.addEventListener('click',function(e){
 function go(r, s){ var hh=r; if(r==='love'){ r='ask'; s='love'; } route=r; sub=s||null; location.hash = (r==='ask'&&sub==='love')?'love':hh; render(); window.scrollTo(0,0); if(GO) track('view_'+r+(sub?'_'+sub:'')); }
 window.addEventListener('hashchange', function(){ var h=location.hash.replace('#','')||'home'; if(h==='love'){ if(!(route==='ask'&&sub==='love')) go('love'); return; } if(h!==route){ route=h; sub=null; render(); } });
 
-var NAV = [['home','Home'],['luck','개운'],['love','연애'],['chart','Manse'],['letters','Letter'],['people','Friends']];
+var NAV = [['home','홈'],['love','연애'],['reunion','재회'],['chart','내 사주']];
 function renderNav(){
   document.getElementById('nav').innerHTML = NAV.map(function(n){
-    return '<a href="#'+n[0]+'" data-go="'+n[0]+'" '+(route===n[0]||((route==='match'||route==='squad')&&n[0]==='people')||(route==='reunion'&&n[0]==='love')||(route==='ask'&&sub==='love'&&n[0]==='love')||(route==='muse'&&n[0]==='home')||(route==='read'&&n[0]==='letters')?'aria-current="page"':'')+'>'+SVG.nav[n[0]]+n[1]+'</a>';
+    return '<a href="#'+n[0]+'" data-go="'+n[0]+'" '+(route===n[0]||((route==='match'||route==='squad')&&n[0]==='people')||(route==='luck'&&n[0]==='home')||(route==='ask'&&sub==='love'&&n[0]==='love')||(route==='muse'&&n[0]==='home')||(route==='read'&&n[0]==='letters')?'aria-current="page"':'')+'>'+SVG.nav[n[0]]+n[1]+'</a>';
   }).join('');
 }
 function render(){
@@ -1188,7 +1210,7 @@ function render(){
 
 function header(){
   var p=cur(), d=new Date(), c=chartOf(p), t=E.today(c);
-  return '<header class="hello"><div><h1>Hello,<span class="nm">'+esc(p.name)+'.</span></h1>'+
+  return '<header class="hello"><div><h1>안녕, '+esc(p.name)+' ♡</h1>'+
     '<div class="date">'+DAYS[d.getDay()]+', '+MONTHS[d.getMonth()]+' '+d.getDate()+' · 음력 '+t.lunar+' · '+t.dayKo+'일</div></div>'+
     '<button class="iconbtn" data-act="switch" aria-label="다른 사람 사주 보기">'+SVG.nav.people+'</button></header>';
 }
@@ -1238,17 +1260,15 @@ function vHome(){
   var ce=c.stars.filter(function(s){return s.name==='천을귀인';}).length;
   var heartPanel='<div class="panel p" style="display:flex;gap:12px;align-items:center"><div style="flex:1"><div class="big">My Saju</div><div class="cap" style="margin-top:8px">'+c.pillars[1].ko+' day · '+c.dayEl+' element<br>'+(du?'daeun '+du.ko+' '+du.startYear+'-'+du.endYear:'')+'<br>born '+p.y+'.'+pad(p.m)+'.'+pad(p.d)+'</div></div>'+pixIcon('heart',7,'#6b6b6b')+'</div>';
   var tags=[c.pillars[1].ko+'일주', c.animal+'띠', ce?'천을귀인':c.dayEl+' 일간', du?du.ko+' 대운':'', E.seun(c,y,y)[0].ko+'년'].filter(Boolean);
-  var tm=todayMission(p);
-  var doors='<div class="doors"><button class="door" data-go="luck"><span class="d-tag">TODAY</span><b>오늘의 개운 루틴</b><span>'+esc(tm.text)+'</span><i>바로 하기 →</i></button>'+
-    '<button class="door" data-go="love"><span class="d-tag">LOVE</span><b>내 연애운 편지</b><span>끌리는 사람 · 반복되는 패턴 · 타이밍</span><i>물어보기 →</i></button></div>';
-  return header()+doors+idCard(p)+pearls()+
+  var doors=doorsHTML('go');
+  return header()+doors+'<details class="more"><summary>다른 기능 더 보기 <small>만세력 · 개운 · 궁합 · 추구미 · 편지함</small></summary>'+idCard(p)+pearls()+
     win('fortune.exe', bubble)+squadBanner()+luckyKit(p)+lace()+
     '<div class="folders">'+folders.map(function(f,i){return '<button class="folder" data-go="'+f[0]+'">'+SVG.folder(i)+'<span class="f-stk">'+stk(f[3],48)+'</span><span class="lace-tab" aria-hidden="true"></span><span class="lbl"><b>'+f[1]+'</b><small>'+f[2]+'</small></span></button>';}).join('')+'</div>'+
     (function(){ var un=allLetters().filter(function(l){return !isOpened(l.key);}); return un.length?envRow(un[0].key, '안 읽은 편지 '+un.length+'통 · '+un[0].title):''; })()+roster()+'<p style="margin:0 0 6px"><button class="btn" data-act="quickgo">＋ 생년월일로 새 사주 보기</button></p><div class="grid2"><button class="btn ghost" data-act="openLetter" data-ch="s_new'+(new Date().getFullYear()+1)+'">'+(new Date().getFullYear()+1)+' 신년운세</button><button class="btn ghost" data-go="match">♡ 궁합 순위</button></div><div class="grid2" style="margin-top:6px"><button class="btn ghost" data-go="reunion">재회운</button><button class="btn ghost" data-go="ask">요즘 질문</button></div>'+
     '<button class="row" data-go="luck" style="margin-top:10px"><span class="ic">'+OBJ.pearl(36)+'</span><span class="t"><b>오늘의 개운 미션</b><span>'+esc(todayMission(p).text)+' · '+todayMission(p).el+' 채우기</span></span><span class="check">GO</span></button>'+
     '<div class="sec-h"><h2>Flow</h2><span class="sel">지금 흐르는 운</span></div>'+
     (du?'<div class="row"><span class="ic">'+OBJ.ribbon(44)+'</span><span class="t"><b>대운 '+du.ko+'</b><span>'+du.startYear+'~'+du.endYear+' · '+du.ganTen+'/'+du.zhiTen+' · '+du.unseong+'</span></span><span class="check">'+(y-du.startYear+1)+'/10</span></div>':'')+
-    se.map(function(s,i){return '<div class="row"><span class="ic">'+(i?OBJ.cd(38):OBJ.camera(44))+'</span><span class="t"><b>'+s.year+' '+s.ko+'년</b><span>'+s.ganTen+' · '+s.zhiTen+' · '+s.unseong+' | '+s.age+'세</span></span><span class="check">'+(i?'NEXT':'NOW')+'</span></div>';}).join('');
+    se.map(function(s,i){return '<div class="row"><span class="ic">'+(i?OBJ.cd(38):OBJ.camera(44))+'</span><span class="t"><b>'+s.year+' '+s.ko+'년</b><span>'+s.ganTen+' · '+s.zhiTen+' · '+s.unseong+' | '+s.age+'세</span></span><span class="check">'+(i?'NEXT':'NOW')+'</span></div>';}).join('')+'</details>';
 }
 
 function vChart(){
@@ -1951,7 +1971,7 @@ function funTiles(p){
 /* ============ 동작 ============ */
 document.addEventListener('click', function(e){
   var t=e.target.closest('[data-go],[data-act],[data-seg],[data-q],[data-rseg]'); if(!t) return;
-  if(t.dataset.go){ e.preventDefault(); if(t.classList.contains('door')) track('door_'+t.dataset.go); if(t.dataset.go==='people') draft=null; go(t.dataset.go); return; }
+  if(t.dataset.go){ e.preventDefault(); if(t.classList.contains('door')) track('door_'+(t.dataset.sub||t.dataset.go)); if(t.dataset.go==='people') draft=null; go(t.dataset.go, t.dataset.sub); return; }
   if(t.dataset.rseg){ readReunion(); state.reunion[cur().id][t.dataset.rseg]=t.dataset.v; save(); render(); return; }
   if(t.dataset.q && !t.dataset.act){ qd[t.dataset.q]=t.dataset.v; var keep={n:(document.getElementById('q_name')||{}).value,b:(document.getElementById('q_birth')||{}).value,t:(document.getElementById('q_time')||{}).value}; t.parentNode.querySelectorAll('[data-q="'+t.dataset.q+'"]').forEach(function(x){x.setAttribute('aria-pressed', String(x===t));}); return; }
   if(t.dataset.seg){ readDraftInputs(); draft[t.dataset.seg]=t.dataset.v; render(); return; }
