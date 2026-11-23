@@ -395,6 +395,13 @@ h1,h2,h3{text-wrap:balance;margin:0}
 .dots i.on{background:radial-gradient(circle at 35% 30%,#fff 0 20%,#F7B8CC 45%,#E58FAC 100%);border-color:#d98aa5}
 .dots i.half{background:linear-gradient(90deg,#F2A9C0 50%,#f3e6ea 50%)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.doors{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 16px}
+.door{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:16px 14px;border:1.5px solid var(--cocoa);background:var(--blush);border-radius:6px;cursor:pointer;color:inherit;font:inherit;box-shadow:3px 3px 0 var(--cocoa)}
+.door .d-tag{font-size:10px;letter-spacing:.16em;opacity:.75}
+.door b{font-size:17px;letter-spacing:-0.04em;line-height:1.2}
+.door span:not(.d-tag){font-size:12px;letter-spacing:-0.03em;line-height:1.4;opacity:.85}
+.door i{font-style:normal;font-size:12px;margin-top:auto;font-weight:600}
+.door:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--cocoa)}
 .land{min-height:78vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:24px 10px}
 .land-tag{font-size:11px;letter-spacing:.18em;color:var(--cocoa);border:1px solid var(--cocoa);padding:3px 10px}
 .land-logo{transform:scale(1.15);margin:6px 0}
@@ -924,6 +931,8 @@ var SVG = {
   heart:'<svg viewBox="0 0 24 22" width="22" height="20" aria-hidden="true"><path d="M12 20S2 13.5 2 7.2A4.9 4.9 0 0 1 12 5a4.9 4.9 0 0 1 10 2.2C22 13.5 12 20 12 20z" fill="#fff" stroke="#6E5650" stroke-width="1.5"/></svg>',
   folder:function(id){ return '<svg viewBox="0 0 200 160" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="fg'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBEDF2"/><stop offset="1" stop-color="#F7E6EC"/></linearGradient><filter id="fs'+id+'" x="-10%" y="-10%" width="120%" height="130%"><feGaussianBlur in="SourceAlpha" stdDeviation="3"/><feOffset dy="2"/><feComponentTransfer><feFuncA type="linear" slope=".18"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g filter="url(#fs'+id+')"><path d="M8 26q0-14 14-14h50q8 0 13 7l7 11h86q14 0 14 14v94q0 14-14 14H22q-14 0-14-14z" fill="#F2DDE5"/><path d="M8 42q0-12 14-12h156q14 0 14 14v92q0 14-14 14H22q-14 0-14-14z" fill="url(#fg'+id+')"/></g></svg>'; },
   nav:{
+    luck:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></svg>',
+    love:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 20S3 14.5 3 8.6A4.6 4.6 0 0 1 12 6.5a4.6 4.6 0 0 1 9 2.1C21 14.5 12 20 12 20z"/></svg>',
     home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>',
     chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M8 4v16M13 4v16M3 10h18"/></svg>',
     letters:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>',
@@ -1115,7 +1124,8 @@ function submitQuick(){
 function vWelcome(){
   return '<header class="hello"><div><h1>Hello,</h1><div class="date">생년월일만 넣으면 바로 사주가 펼쳐져요</div></div></header>'+
     '<section class="idcard" style="grid-template-columns:1fr"><div class="logo"><span class="s">Juju\'s</span><span class="p">LET<br>TER</span>'+OBJ.key(52)+'</div><p style="margin:0;font-size:12.5px">만세력 · 천을귀인 · 12신살 · 대운 · 세운 · AI 사주 편지</p></section>'+
-    pearls()+quickForm(landTo?'step1_생년월일.exe':'welcome.exe');
+    (landTo?'':'<div class="sec-h"><h2>뭐부터 볼까?</h2><span class="sel">고르고 생일만 넣으면 끝</span></div><div class="doors"><button class="door" data-pick="luck"><span class="d-tag">LUCK</span><b>내 개운 루틴</b><span>사주에 모자란 기운 채우는 작은 습관</span><i>이걸로 →</i></button><button class="door" data-pick="love"><span class="d-tag">LOVE</span><b>내 연애운 편지</b><span>끌리는 사람 · 반복되는 패턴</span><i>이걸로 →</i></button></div>')+
+    pearls()+quickForm(landTo?(landTo.to==='luck'?'개운루틴_생년월일.exe':'연애편지_생년월일.exe'):'welcome.exe');
 }
 /* ============ 렌더 ============ */
 var route = 'home', sub = null;
@@ -1148,18 +1158,21 @@ function vLand(){
    '<p class="tiny muted land-note">생년월일만 넣으면 끝 · 30초</p></section>';
 }
 document.addEventListener('click',function(e){
+  var pk=e.target.closest('[data-pick]'); if(pk){ e.preventDefault(); landTo=LANDS[pk.dataset.pick]; track('pick_'+pk.dataset.pick); render(); var q=document.getElementById('q_birth'); if(q){ q.scrollIntoView({block:'center'}); q.focus(); } return; }
+},true);
+document.addEventListener('click',function(e){
   var b=e.target.closest('[data-land]'); if(!b) return; e.preventDefault();
   var L=LANDS[GO]; track('cta'); landMode=false; landTo=L;
   if(state.profiles.length){ landTo=null; track('target'); go(L.to, L.sub); }
   else { render(); var f=document.getElementById('q_birth'); if(f) f.focus(); }
 }, true);
-function go(r, s){ route=r; sub=s||null; location.hash = r; render(); window.scrollTo(0,0); if(GO) track('view_'+r+(sub?'_'+sub:'')); }
-window.addEventListener('hashchange', function(){ var h=location.hash.replace('#','')||'home'; if(h!==route){ route=h; sub=null; render(); } });
+function go(r, s){ var hh=r; if(r==='love'){ r='ask'; s='love'; } route=r; sub=s||null; location.hash = (r==='ask'&&sub==='love')?'love':hh; render(); window.scrollTo(0,0); if(GO) track('view_'+r+(sub?'_'+sub:'')); }
+window.addEventListener('hashchange', function(){ var h=location.hash.replace('#','')||'home'; if(h==='love'){ if(!(route==='ask'&&sub==='love')) go('love'); return; } if(h!==route){ route=h; sub=null; render(); } });
 
-var NAV = [['home','Home'],['chart','Manse'],['letters','Letter'],['ask','Ask'],['talk','Talk'],['people','Friends']];
+var NAV = [['home','Home'],['luck','개운'],['love','연애'],['chart','Manse'],['letters','Letter'],['people','Friends']];
 function renderNav(){
   document.getElementById('nav').innerHTML = NAV.map(function(n){
-    return '<a href="#'+n[0]+'" data-go="'+n[0]+'" '+(route===n[0]||((route==='match'||route==='squad')&&n[0]==='people')||(route==='reunion'&&n[0]==='ask')||(route==='luck'&&n[0]==='home')||(route==='muse'&&n[0]==='home')||(route==='read'&&n[0]==='letters')?'aria-current="page"':'')+'>'+SVG.nav[n[0]]+n[1]+'</a>';
+    return '<a href="#'+n[0]+'" data-go="'+n[0]+'" '+(route===n[0]||((route==='match'||route==='squad')&&n[0]==='people')||(route==='reunion'&&n[0]==='love')||(route==='ask'&&sub==='love'&&n[0]==='love')||(route==='muse'&&n[0]==='home')||(route==='read'&&n[0]==='letters')?'aria-current="page"':'')+'>'+SVG.nav[n[0]]+n[1]+'</a>';
   }).join('');
 }
 function render(){
@@ -1221,11 +1234,14 @@ function vHome(){
     '<div class="kw">'+t.ganTen+' · '+t.zhiTen+'의 날</div><p class="muted">12운성 '+t.unseong+' · '+t.sinsal+'</p>'+
     (saved?'':'<p style="margin-top:6px"><button class="pill pk" data-act="today">Morning Note 열어보기</button></p>')+'</div></div>'+
     '<div class="fortune-text" id="todayOut">'+(saved?'<div class="paper" style="font-size:13px">'+md(saved)+'</div><p style="margin:10px 0 0;text-align:right"><button class="pill" data-act="today" data-force="1">다시 뽑기</button></p>':'')+'</div>';
-  var folders=[['chart','Manse','만세력 · 천을귀인','vanity'],['letters','Letter','Life Letter · 평생 편지','heartbow'],['ask','Ask','요즘 화제 질문','headphone'],['luck','Luck','Soft Ritual · 개운법','candle'],['muse','Muse','추구미 · 셀럽 사주','greenmask'],['match','Match','궁합 · 우리 무리','bow']];
+  var folders=[['chart','Manse','만세력 · 천을귀인','vanity'],['letters','Letter','Life Letter · 평생 편지','heartbow'],['ask','Ask','요즘 화제 질문','headphone'],['luck','Luck','Soft Ritual · 개운법','candle'],['muse','Muse','추구미 · 셀럽 사주','greenmask'],['match','Match','궁합 · 우리 무리','bow'],['talk','Talk','사주한테 물어보기','headphone']];
   var ce=c.stars.filter(function(s){return s.name==='천을귀인';}).length;
   var heartPanel='<div class="panel p" style="display:flex;gap:12px;align-items:center"><div style="flex:1"><div class="big">My Saju</div><div class="cap" style="margin-top:8px">'+c.pillars[1].ko+' day · '+c.dayEl+' element<br>'+(du?'daeun '+du.ko+' '+du.startYear+'-'+du.endYear:'')+'<br>born '+p.y+'.'+pad(p.m)+'.'+pad(p.d)+'</div></div>'+pixIcon('heart',7,'#6b6b6b')+'</div>';
   var tags=[c.pillars[1].ko+'일주', c.animal+'띠', ce?'천을귀인':c.dayEl+' 일간', du?du.ko+' 대운':'', E.seun(c,y,y)[0].ko+'년'].filter(Boolean);
-  return header()+idCard(p)+pearls()+
+  var tm=todayMission(p);
+  var doors='<div class="doors"><button class="door" data-go="luck"><span class="d-tag">TODAY</span><b>오늘의 개운 루틴</b><span>'+esc(tm.text)+'</span><i>바로 하기 →</i></button>'+
+    '<button class="door" data-go="love"><span class="d-tag">LOVE</span><b>내 연애운 편지</b><span>끌리는 사람 · 반복되는 패턴 · 타이밍</span><i>물어보기 →</i></button></div>';
+  return header()+doors+idCard(p)+pearls()+
     win('fortune.exe', bubble)+squadBanner()+luckyKit(p)+lace()+
     '<div class="folders">'+folders.map(function(f,i){return '<button class="folder" data-go="'+f[0]+'">'+SVG.folder(i)+'<span class="f-stk">'+stk(f[3],48)+'</span><span class="lace-tab" aria-hidden="true"></span><span class="lbl"><b>'+f[1]+'</b><small>'+f[2]+'</small></span></button>';}).join('')+'</div>'+
     (function(){ var un=allLetters().filter(function(l){return !isOpened(l.key);}); return un.length?envRow(un[0].key, '안 읽은 편지 '+un.length+'통 · '+un[0].title):''; })()+roster()+'<p style="margin:0 0 6px"><button class="btn" data-act="quickgo">＋ 생년월일로 새 사주 보기</button></p><div class="grid2"><button class="btn ghost" data-act="openLetter" data-ch="s_new'+(new Date().getFullYear()+1)+'">'+(new Date().getFullYear()+1)+' 신년운세</button><button class="btn ghost" data-go="match">♡ 궁합 순위</button></div><div class="grid2" style="margin-top:6px"><button class="btn ghost" data-go="reunion">재회운</button><button class="btn ghost" data-go="ask">요즘 질문</button></div>'+
@@ -1492,7 +1508,7 @@ function vAsk(){
   }
   return header()+'<div class="sec-h"><h2>Ask</h2><span class="sel">요즘 다들 묻는 질문</span></div>'+
     '<p class="muted" style="margin:-4px 2px 14px;font-size:11.5px">SNS·AI 사주에서 가장 많이 나오는 고민들로 골랐어요. 질문을 누르면 '+esc(p.name)+'님 만세력으로 바로 풀어드려요.</p>'+
-    '<div class="folders">'+TOPICS.map(function(T,i){ return '<button class="folder" data-act="topic" data-k="'+T.k+'">'+SVG.folder('t'+i)+'<span class="lace-tab" aria-hidden="true"></span><span class="lbl"><b>'+T.t+'</b><small>'+T.ko+'</small></span></button>'; }).join('')+'</div>';
+    '<div class="folders">'+TOPICS.slice().sort(function(a,b){return (b.k==='love')-(a.k==='love');}).map(function(T,i){ return '<button class="folder" data-act="topic" data-k="'+T.k+'">'+SVG.folder('t'+i)+'<span class="lace-tab" aria-hidden="true"></span><span class="lbl"><b>'+T.t+'</b><small>'+T.ko+'</small></span></button>'; }).join('')+'</div>';
 }
 var openQ=null;
 function runAskCustom(q,T){ state.customQ=state.customQ||{}; var arr=state.customQ[T.k]=state.customQ[T.k]||[]; arr.push(q); save(); var idx=T.qs.length+arr.length-1; render(); runAsk('q_'+T.k+'_'+idx, q, true); }
@@ -1935,7 +1951,7 @@ function funTiles(p){
 /* ============ 동작 ============ */
 document.addEventListener('click', function(e){
   var t=e.target.closest('[data-go],[data-act],[data-seg],[data-q],[data-rseg]'); if(!t) return;
-  if(t.dataset.go){ e.preventDefault(); if(t.dataset.go==='people') draft=null; go(t.dataset.go); return; }
+  if(t.dataset.go){ e.preventDefault(); if(t.classList.contains('door')) track('door_'+t.dataset.go); if(t.dataset.go==='people') draft=null; go(t.dataset.go); return; }
   if(t.dataset.rseg){ readReunion(); state.reunion[cur().id][t.dataset.rseg]=t.dataset.v; save(); render(); return; }
   if(t.dataset.q && !t.dataset.act){ qd[t.dataset.q]=t.dataset.v; var keep={n:(document.getElementById('q_name')||{}).value,b:(document.getElementById('q_birth')||{}).value,t:(document.getElementById('q_time')||{}).value}; t.parentNode.querySelectorAll('[data-q="'+t.dataset.q+'"]').forEach(function(x){x.setAttribute('aria-pressed', String(x===t));}); return; }
   if(t.dataset.seg){ readDraftInputs(); draft[t.dataset.seg]=t.dataset.v; render(); return; }
@@ -2101,7 +2117,7 @@ async function runMatch(){
 }
 
 /* 시작 */
-route = (location.hash.replace('#','')||'home'); if(!({read:1, muse:1, luck:1, home:1,chart:1,letters:1,ask:1,reunion:1,talk:1,people:1,match:1})[route]) route='home';
+route = (location.hash.replace('#','')||'home'); if(route==='love'){ route='ask'; sub='love'; } if(!({read:1, muse:1, luck:1, home:1,chart:1,letters:1,ask:1,reunion:1,talk:1,people:1,match:1})[route]) route='home';
 render();
 if(landMode) track('land'); else if(GO) track('land_unknown');
 cloudInit();
