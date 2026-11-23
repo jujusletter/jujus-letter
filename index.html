@@ -395,7 +395,15 @@ h1,h2,h3{text-wrap:balance;margin:0}
 .dots i.on{background:radial-gradient(circle at 35% 30%,#fff 0 20%,#F7B8CC 45%,#E58FAC 100%);border-color:#d98aa5}
 .dots i.half{background:linear-gradient(90deg,#F2A9C0 50%,#f3e6ea 50%)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.land{min-height:78vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:24px 10px}
+.land-tag{font-size:11px;letter-spacing:.18em;color:var(--cocoa);border:1px solid var(--cocoa);padding:3px 10px}
+.land-logo{transform:scale(1.15);margin:6px 0}
+.land-h{margin:4px 0 0;font-size:30px;line-height:1.25;letter-spacing:-0.04em}
+.land-p{margin:0;font-size:14px;letter-spacing:-0.03em;opacity:.8}
+.land-btn{margin-top:12px;font-size:17px;padding:16px 28px;width:min(320px,90%)}
+.land-note{margin:0}
 </style>
+<script data-goatcounter="https://jujusletter.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </head>
 <body>
 <div class="app" id="app"></div>
@@ -1102,16 +1110,50 @@ function submitQuick(){
   if(t){ if(t.length<=2){ h=+t; } else { t=t.padStart(4,'0'); h=+t.slice(0,2); mi=+t.slice(2,4); } if(!(h>=0&&h<=23&&mi>=0&&mi<=59)){ toast('시간은 0000~2359 사이로 적어주세요'); return; } }
   var p={id:uid(), name:name||('사주 '+(state.profiles.length+1)), relation:state.profiles.length?'친구':'본인', gender:qd.gender, calendar:qd.cal==='solar'?'solar':'lunar', leap:qd.cal==='leap', y:y,m:m,d:d,h:h,mi:mi, opts:{localCorrection:true,yajasi:false}};
   try{ E.compute(p); }catch(err){ toast('계산할 수 없는 날짜예요. 음력/윤달을 확인해주세요'); return; }
-  state.profiles.push(p); state.currentId=p.id; save(); toast(p.name+' 사주를 펼쳤어요'); go('chart');
+  state.profiles.push(p); state.currentId=p.id; save(); toast(p.name+' 사주를 펼쳤어요'); track('form_done'); if(landTo){ var T=landTo; landTo=null; go(T.to, T.sub); } else go('chart');
 }
 function vWelcome(){
   return '<header class="hello"><div><h1>Hello,</h1><div class="date">생년월일만 넣으면 바로 사주가 펼쳐져요</div></div></header>'+
     '<section class="idcard" style="grid-template-columns:1fr"><div class="logo"><span class="s">Juju\'s</span><span class="p">LET<br>TER</span>'+OBJ.key(52)+'</div><p style="margin:0;font-size:12.5px">만세력 · 천을귀인 · 12신살 · 대운 · 세운 · AI 사주 편지</p></section>'+
-    pearls()+quickForm('welcome.exe');
+    pearls()+quickForm(landTo?'step1_생년월일.exe':'welcome.exe');
 }
 /* ============ 렌더 ============ */
 var route = 'home', sub = null;
-function go(r, s){ route=r; sub=s||null; location.hash = r; render(); window.scrollTo(0,0); }
+/* ============ 랜딩(한 화면 한 버튼) + 측정 ============ */
+var QS=new URLSearchParams(location.search), GO=(QS.get('go')||'').toLowerCase(), SRC=(QS.get('src')||'').toLowerCase();
+var LANDS={
+ love:{to:'ask',sub:'love',tag:'LOVE LETTER',h:'내 사주로 보는<br>연애운 편지',p:'끌리는 사람 · 반복되는 패턴 · 연애 타이밍',btn:'내 연애운 편지 받기 ♡'},
+ year:{to:'ask',sub:'year',tag:'LETTER No.27',h:'2027 신년운세<br>미리 받아보기',p:'정미년, 나한테 어떤 해일까',btn:'신년 편지 받기 ♡'},
+ luck:{to:'luck',tag:'LUCKY ROUTINE',h:'오늘 나한테 맞는<br>개운 루틴',p:'내 사주에 모자란 기운을 채우는 작고 확실한 루틴',btn:'내 개운 루틴 받기 ♡'},
+ squad:{to:'squad',tag:'SQUAD MATCH',h:'우리 무리<br>궁합 관계도',p:'친구 2~5명 생일만 넣으면 관계도가 그려져요',btn:'관계도 그려보기 ♡'},
+ muse:{to:'muse',tag:'MY MUSE',h:'내 사주로 보는<br>추구미',p:'내 일간이 제일 예뻐 보이는 무드',btn:'내 추구미 보기 ♡'}
+};
+var landMode=!!LANDS[GO], landTo=null, evQ=[];
+function track(ev){
+  var path='ev/'+(GO||'direct')+'/'+ev+(SRC?'?src='+SRC:'');
+  try{ var L=JSON.parse(localStorage.getItem('jl-ev')||'{}'); L[path]=(L[path]||0)+1; localStorage.setItem('jl-ev',JSON.stringify(L)); }catch(e){}
+  evQ.push(path); flushEv();
+}
+function flushEv(){
+  if(!(window.goatcounter&&window.goatcounter.count)) return;
+  while(evQ.length){ var p=evQ.shift(); try{ window.goatcounter.count({path:p,title:p,event:true}); }catch(e){} }
+}
+window.addEventListener('load',function(){ setTimeout(flushEv,800); setTimeout(flushEv,3000); });
+function vLand(){
+  var L=LANDS[GO];
+  return '<section class="land"><div class="land-tag">'+L.tag+'</div>'+
+   '<div class="logo land-logo"><span class="s">Juju\'s</span><span class="p">LET<br>TER</span>'+OBJ.key(48)+'</div>'+
+   '<h1 class="land-h">'+L.h+'</h1><p class="land-p">'+L.p+'</p>'+
+   '<button class="btn land-btn" data-land="1">'+L.btn+'</button>'+
+   '<p class="tiny muted land-note">생년월일만 넣으면 끝 · 30초</p></section>';
+}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('[data-land]'); if(!b) return; e.preventDefault();
+  var L=LANDS[GO]; track('cta'); landMode=false; landTo=L;
+  if(state.profiles.length){ landTo=null; track('target'); go(L.to, L.sub); }
+  else { render(); var f=document.getElementById('q_birth'); if(f) f.focus(); }
+}, true);
+function go(r, s){ route=r; sub=s||null; location.hash = r; render(); window.scrollTo(0,0); if(GO) track('view_'+r+(sub?'_'+sub:'')); }
 window.addEventListener('hashchange', function(){ var h=location.hash.replace('#','')||'home'; if(h!==route){ route=h; sub=null; render(); } });
 
 var NAV = [['home','Home'],['chart','Manse'],['letters','Letter'],['ask','Ask'],['talk','Talk'],['people','Friends']];
@@ -1122,6 +1164,7 @@ function renderNav(){
 }
 function render(){
   var navEl=document.querySelector('.nav'); navEl.style.display=state.profiles.length?'':'none';
+  if(landMode){ navEl.style.display='none'; $app.innerHTML = vLand(); return; }
   if(!state.profiles.length){ $app.innerHTML = vWelcome(); return; }
   if(!cur()) state.currentId=state.profiles[0].id;
   var r = ({read:vRead, muse:vMuse, luck:vLuck, home:vHome, chart:vChart, letters:vLetters, ask:vAsk, reunion:vReunion, talk:vTalk, people:vPeople, match:vMatch, squad:vSquad})[route] || vHome;
@@ -1904,6 +1947,7 @@ document.addEventListener('click', function(e){
   if(a==='clearKey'){ setKey(''); toast('키를 지웠어'); render(); return; }
   if(a==='exportData'){ var blob=new Blob([JSON.stringify(state)],{type:'application/json'}); var u=URL.createObjectURL(blob); var aa=document.createElement('a'); aa.href=u; aa.download='saju-diary-backup-'+new Date().toISOString().slice(0,10)+'.json'; document.body.appendChild(aa); aa.click(); aa.remove(); setTimeout(function(){URL.revokeObjectURL(u);},1000); return; }
   if(a==='importData'){ var fi=document.getElementById('importInput'); fi.onchange=function(){ var f=fi.files[0]; if(!f) return; var rd=new FileReader(); rd.onload=function(){ try{ var o=JSON.parse(rd.result); if(!o.profiles) throw 0; Object.keys(o).forEach(function(k){ state[k]=o[k]; }); save(); toast('백업 불러오기 완료'); render(); }catch(e){ toast('백업 파일이 아니야'); } }; rd.readAsText(f); }; fi.click(); return; }
+  if(GO && a) track('act_'+a+(t.dataset.k?'_'+t.dataset.k:''));
   if(a==='switch') go('people');
   else if(a==='photo') document.getElementById('photoInput').click();
   else if(a==='today') runToday(!!t.dataset.force);
@@ -2059,6 +2103,7 @@ async function runMatch(){
 /* 시작 */
 route = (location.hash.replace('#','')||'home'); if(!({read:1, muse:1, luck:1, home:1,chart:1,letters:1,ask:1,reunion:1,talk:1,people:1,match:1})[route]) route='home';
 render();
+if(landMode) track('land'); else if(GO) track('land_unknown');
 cloudInit();
 })();
 </script>
